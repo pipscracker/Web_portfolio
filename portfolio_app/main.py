@@ -76,15 +76,26 @@ def main(page: ft.Page):
         
         def display_doc(e, doc_type, url):
             try:
-                file_id = url.split("/d/")[1].split("/")[0]
+                # Extracts the unique ID between /d/ and /view
+                if "/d/" in url:
+                    file_id = url.split("/d/")[1].split("/")[0]
+                elif "id=" in url:
+                    file_id = url.split("id=")[1].split("&")[0]
+                else:
+                    file_id = url
+                
+                # FORCE TRUE DIRECT RAW IMAGE STREAMING
                 direct_img_url = f"https://drive.google.com/uc?export=view&id={file_id}"
             except Exception:
                 direct_img_url = url
             
+            # Print the converted link to your terminal to make sure it's formatting right
+            print(f"Streaming direct image URL: {direct_img_url}")
+            
             doc_viewer_title.value = f"Viewing: {name} - {doc_type}"
             doc_viewer_desc.value = "Displaying verification document inline below:"
             
-            # Update source cleanly without touching missing attributes
+            # Update source cleanly and force visibility
             doc_viewer_image.src = direct_img_url
             doc_viewer_image.visible = True
             page.update()
