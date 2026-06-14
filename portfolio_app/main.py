@@ -87,23 +87,15 @@ def main(page: ft.Page):
     # REUSABLE MATLAB CARD COMPONENT WRAPPER
     def course_card(name, cert_url, report_url):
         def display_doc(e, doc_type, url):
-            # Convert the standard view link into a direct image export link
-            # Works perfectly for images/PDFs stored on Google Drive
-            embed_url = url.replace("/view?usp=drive_link", "/preview").replace("/view?usp=drivesdk", "/preview")
-
             doc_viewer_title.value = f"Viewing: {name} - {doc_type}"
-            doc_viewer_desc.value = "If the embedded document preview doesn't load automatically due to security restrictions, use the action button below to open it directly."
+            doc_viewer_desc.value = "To view or verify this official document, click the secure verification action button below to open it directly in a new tab."
 
             doc_viewer_button.url = url
             doc_viewer_button.visible = True
 
-            # Use ft.Image pointing to the preview URL
-            doc_viewer_frame.content = ft.Image(
-                src=embed_url,
-                fit="contain",
-                expand=True
-            )
-            doc_viewer_frame.visible = True
+            # FORCE HIDE THE BLANK CONTAINER
+            doc_viewer_frame.visible = False
+
             page.update()
 
         return ft.Container(
@@ -203,23 +195,21 @@ def main(page: ft.Page):
             bgcolor="grey100",
             border_radius=8
         ),
-        
         ft.Text("Embedded Video Explanation:", weight="w500"),
-        ft.Container(
-            content=ft.Row([
-                ft.Icon("play_circle_fill", color="red", size=40),
-                ft.Text("Click to watch concept implementation video walkthrough", color="blue", size=14, weight="bold")
-            ], alignment="center"),
-            padding=15,
-            border=ft.Border(
-                top=ft.BorderSide(1, "grey400"),
-                bottom=ft.BorderSide(1, "grey400"),
-                left=ft.BorderSide(1, "grey400"),
-                right=ft.BorderSide(1, "grey400")
-            ),
-            border_radius=10,
-            on_click=lambda e: page.launch_url("https://www.youtube.com") 
-        ),
+        ft.Row([
+            ft.Container(
+                content=ft.Row([
+                    ft.Icon("play_circle_fill", color="white", size=20),
+                    ft.Text("Click to watch the video", color="white", weight="bold", size=14),
+                ], alignment="center", spacing=10, tight=True), 
+                bgcolor="red600",
+                padding=12, # <-- Simple integer uniform padding works everywhere!
+                border_radius=8,
+                width=260,
+                height=48, 
+                on_click=lambda e: page.launch_url("https://www.youtube.com")
+            )
+        ], alignment="start")
     ], spacing=12, visible=False)
 
     # REUSABLE GIT DESIGN COMPONENT WRAPPER
@@ -276,9 +266,24 @@ def main(page: ft.Page):
         ft.Text("3. Impact Summary", size=18, weight="bold", color="blue600"),
         ft.Container(
             content=ft.Column([
-                ft.Text("My specific script modifications and hardware interface abstraction logic directly resolved critical processing deadlocks within the application's Metallurgical, Mining, and Civil engineering estimation sub-modules.", weight="bold"),
-                ft.Text("By cleaning up async calculation steps, processing overhead for large material cost computations was minimized, ensuring accurate performance calculations across multi-disciplinary teams."),
-            ]),
+                ft.Text(
+                    "Problem Statement & Technical Challenge:", 
+                    weight="bold", size=14, color="blue900"
+                ),
+                ft.Text(
+                    "During the integration phase of the multi-disciplinary engineering estimation engine, major cross-platform compilation deadlocks and data-sync crashes occurred. Mixing core simulation math scripts led to critical runtime environment parsing errors. Additionally, asynchronous calculations within the Civil and Mining sub-modules caused data leakages and UI synchronization stutters, leaving background estimation processes incomplete.",
+                    size=13
+                ),
+                ft.Container(height=5),
+                ft.Text(
+                    "Implemented Solution & Engineering Impact:", 
+                    weight="bold", size=14, color="blue900"
+                ),
+                ft.Text(
+                    "To resolve this, I isolated the cross-language dependencies by tracking down and debugging mixed TypeScript/JavaScript syntax errors across the core processing modules. I stabilized the database and calculation layers by deploying robust Firebase Configuration APIs to securely track engineering data metrics. Finally, I engineered an optimized UI state interval controller ('Countdown Interval Routine') that kept complex metallurgical estimation threads running smoothly in the background, eliminating calculation lags and securing fluid performance across all engineering sub-modules.",
+                    size=13
+                ),
+            ], spacing=8),
             padding=15,
             bgcolor="blue50",
             border_radius=8
