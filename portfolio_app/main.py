@@ -86,23 +86,35 @@ def main(page: ft.Page):
 
     # REUSABLE MATLAB CARD COMPONENT WRAPPER
     def course_card(name, cert_url, report_url):
-            def display_doc(e, doc_type, url):
-                # Step A Bypassing: Dynamically extract and swap endpoints 
-                try:
-                 # Grabs the text blocks between '/d/' and the next trailing slash/view argument
-                    file_id = url.split("/d/")[1].split("/")[0]
-                    direct_img_url = f"https://drive.google.com/uc?export=view&id={file_id}"
-                except Exception:
+        def display_doc(e, doc_type, url):
+            # Step A Bypassing: Dynamically extract and swap endpoints 
+            try:
+                # Grabs the text blocks between '/d/' and the next trailing slash/view argument
+                file_id = url.split("/d/")[1].split("/")[0]
+                direct_img_url = f"https://drive.google.com/uc?export=view&id={file_id}"
+            except Exception:
                 # Fallback if your link format is already clean or different
                 direct_img_url = url
 
-                doc_viewer_title.value = f"Viewing: {name} - {doc_type}"
-                doc_viewer_desc.value = "Displaying official document inline."
-    
-                # Point your image control directly to the newly structured stream link
+            doc_viewer_title.value = f"Viewing: {name} - {doc_type}"
+            doc_viewer_desc.value = "Displaying official document inline."
+
+            # Ensure doc_viewer_image exists; create if missing
+            nonlocal_vars = globals()
+            if 'doc_viewer_image' not in nonlocal_vars:
+                # create an Image control and add to the frame
+                doc_viewer_image = ft.Image(src=direct_img_url, width=800, height=600, fit="contain")
+                # store in globals so subsequent calls can access
+                globals()['doc_viewer_image'] = doc_viewer_image
+                # attach to frame
+                doc_viewer_frame.content = doc_viewer_image
+                doc_viewer_frame.visible = True
+            else:
+                doc_viewer_image = globals()['doc_viewer_image']
                 doc_viewer_image.src = direct_img_url
-                doc_viewer_image.visible = True
-                page.update()
+                doc_viewer_frame.visible = True
+
+            page.update()
 
         return ft.Container(
             content=ft.Column([
