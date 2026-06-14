@@ -86,26 +86,28 @@ def main(page: ft.Page):
 
     # REUSABLE MATLAB CARD COMPONENT WRAPPER
     def course_card(name, cert_url, report_url):
-        
         def display_doc(e, doc_type, url):
+            # Convert the standard view link into a direct image export link
+            # Works perfectly for images/PDFs stored on Google Drive
             embed_url = url.replace("/view?usp=drive_link", "/preview").replace("/view?usp=drivesdk", "/preview")
-            
+
             doc_viewer_title.value = f"Viewing: {name} - {doc_type}"
             doc_viewer_desc.value = "If the embedded document preview doesn't load automatically due to security restrictions, use the action button below to open it directly."
-            
+
             doc_viewer_button.url = url
             doc_viewer_button.visible = True
-            
-            doc_viewer_frame.content = ft.WebView(
-            url=embed_url,
-            expand=True
+
+            # Use ft.Image pointing to the preview URL
+            doc_viewer_frame.content = ft.Image(
+                src=embed_url,
+                fit="contain",
+                expand=True
             )
             doc_viewer_frame.visible = True
             page.update()
 
         return ft.Container(
             content=ft.Column([
-                # Fixed by using Column layout alignment instead of ft.alignment.center module call
                 ft.Container(
                     content=ft.Text(name, weight="bold", size=12, text_align="center", color="white"),
                     height=35
@@ -120,7 +122,7 @@ def main(page: ft.Page):
                         content=ft.Text("Report", size=11, weight="w500", color="black"),
                         bgcolor="white", border_radius=4, padding=6,
                         on_click=lambda e: display_doc(e, "Report", report_url)
-                    ),   
+                    ),
                 ], spacing=8, alignment="center"),
             ], spacing=5, alignment="center", horizontal_alignment="center"),
             padding=10, border_radius=10, bgcolor="blue400",
