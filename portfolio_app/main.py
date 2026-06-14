@@ -86,16 +86,23 @@ def main(page: ft.Page):
 
     # REUSABLE MATLAB CARD COMPONENT WRAPPER
     def course_card(name, cert_url, report_url):
-        def display_doc(e, doc_type, url):
-            doc_viewer_title.value = f"Viewing: {name} - {doc_type}"
-            doc_viewer_desc.value = "To view or verify this official document, click the secure verification action button below to open it directly in a new tab."
+            def display_doc(e, doc_type, url):
+                # Step A Bypassing: Dynamically extract and swap endpoints 
+                try:
+                 # Grabs the text blocks between '/d/' and the next trailing slash/view argument
+                    file_id = url.split("/d/")[1].split("/")[0]
+                    direct_img_url = f"https://drive.google.com/uc?export=view&id={file_id}"
+                except Exception:
+                # Fallback if your link format is already clean or different
+                direct_img_url = url
 
-            doc_viewer_button.url = url
-            doc_viewer_button.visible = True
-
-            # FORCE HIDE THE BLANK CONTAINER
-            doc_viewer_frame.visible = False
-
+                doc_viewer_title.value = f"Viewing: {name} - {doc_type}"
+                doc_viewer_desc.value = "Displaying official document inline."
+    
+                # Point your image control directly to the newly structured stream link
+                doc_viewer_image.src = direct_img_url
+                doc_viewer_image.visible = True
+                page.update()
             page.update()
 
         return ft.Container(
