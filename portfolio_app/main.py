@@ -103,7 +103,6 @@ def main(page: ft.Page):
                 doc_viewer_image.src = direct_img_url
                 doc_viewer_image.visible = True
                 page.update()
-            page.update()
 
         return ft.Container(
             content=ft.Column([
