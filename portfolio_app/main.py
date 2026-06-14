@@ -71,35 +71,27 @@ def main(page: ft.Page):
         margin=25
     )
 
-    # REUSABLE MATLAB CARD COMPONENT WRAPPER
-    def course_card(name, cert_url, report_url):
-        
-        def display_doc(e, doc_type, url):
-            try:
-                # Extracts the unique ID between /d/ and /view
-                if "/d/" in url:
-                    file_id = url.split("/d/")[1].split("/")[0]
-                elif "id=" in url:
-                    file_id = url.split("id=")[1].split("&")[0]
-                else:
-                    file_id = url
-                
-                # FORCE TRUE DIRECT RAW IMAGE STREAMING
-                direct_img_url = f"https://drive.google.com/uc?export=view&id={file_id}"
-            except Exception:
-                direct_img_url = url
-            
-            # Print the converted link to your terminal to make sure it's formatting right
-            print(f"Streaming direct image URL: {direct_img_url}")
-            
-            doc_viewer_title.value = f"Viewing: {name} - {doc_type}"
-            doc_viewer_desc.value = "Displaying verification document inline below:"
-            
-            # Update source cleanly and force visibility
-            doc_viewer_image.src = direct_img_url
-            doc_viewer_image.visible = True
-            page.update()
+    # Look for your display_doc function inside main.py
+    def display_doc(e, doc_type, url, course_name=None):
+        try:
+            # Convert standard Google Drive link to a direct streaming raw image link
+            if "/d/" in url:
+                file_id = url.split("/d/")[1].split("/")[0]
+            elif "id=" in url:
+                file_id = url.split("id=")[1].split("&")[0]
+            else:
+                file_id = url
+            direct_url = f"https://drive.google.com/uc?export=view&id={file_id}"
+        except Exception:
+            direct_url = url
 
+        doc_viewer_title.value = f"Viewing: {course_name or 'Document'} - {doc_type}"
+        doc_viewer_desc.value = "Displaying verification document inline below:"
+        doc_viewer_image.src = direct_url
+        doc_viewer_image.visible = True
+        page.update()
+
+    def course_card(name, cert_url, report_url):
         return ft.Container(
             content=ft.Column([
                 ft.Container(
@@ -110,13 +102,13 @@ def main(page: ft.Page):
                     ft.Container(
                         content=ft.Text("Certificate", size=11, weight="w500", color="black"),
                         bgcolor="white", border_radius=4, padding=6,
-                        on_click=lambda e: display_doc(e, "Certificate", cert_url)
+                        on_click=lambda e: display_doc(e, "Certificate", cert_url, name)
                     ),
                     ft.Container(
                         content=ft.Text("Report", size=11, weight="w500", color="black"),
                         bgcolor="white", border_radius=4, padding=6,
-                        on_click=lambda e: display_doc(e, "Report", report_url)
-                    ),   
+                        on_click=lambda e: display_doc(e, "Report", report_url, name)
+                    ),
                 ], spacing=8, alignment="center"),
             ], spacing=5, alignment="center", horizontal_alignment="center"),
             padding=10, border_radius=10, bgcolor="blue400",
