@@ -51,8 +51,8 @@ def main(page: ft.Page):
     doc_viewer_title = ft.Text("Document Showcase", size=18, weight="bold")
     doc_viewer_desc = ft.Text("Click on any course certificate or report button above to preview the document down here.", color="grey600")
     
-    # Using a native Image control optimized for backward-compatible Flet environments
-    doc_viewer_image = ft.Image(visible=False, fit="contain", height=450)
+    # FIX: Adding src="" prevents the missing positional argument crash!
+    doc_viewer_image = ft.Image(src="", visible=False, fit="contain", height=450)
 
     doc_viewer_zone = ft.Container(
         content=ft.Column([
@@ -73,10 +73,11 @@ def main(page: ft.Page):
     )
 
     # REUSABLE MATLAB CARD COMPONENT WRAPPER
+        # REUSABLE MATLAB CARD COMPONENT WRAPPER
     def course_card(name, cert_url, report_url):
         
         def display_doc(e, doc_type, url):
-            # Step A Conversion: Dynamically extract the File ID and point to the direct image stream stream
+            # Dynamically extract the Google Drive File ID for inline streaming
             try:
                 file_id = url.split("/d/")[1].split("/")[0]
                 direct_img_url = f"https://drive.google.com/uc?export=view&id={file_id}"
@@ -86,6 +87,7 @@ def main(page: ft.Page):
             doc_viewer_title.value = f"Viewing: {name} - {doc_type}"
             doc_viewer_desc.value = "Displaying verification document inline below:"
             
+            # FIX: Safely update the source property and make it visible
             doc_viewer_image.src = direct_img_url
             doc_viewer_image.visible = True
             page.update()
