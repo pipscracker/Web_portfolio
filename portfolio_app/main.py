@@ -48,17 +48,18 @@ def main(page: ft.Page):
     ], spacing=8, visible=True)
 
     # DYNAMIC DOCUMENT VIEWER COMPONENT PLACEHOLDER
+    # DYNAMIC DOCUMENT VIEWER COMPONENT PLACEHOLDER
     doc_viewer_title = ft.Text("Document Showcase", size=18, weight="bold")
     doc_viewer_desc = ft.Text("Click on any course certificate or report button above to preview the document down here.", color="grey600")
     
-    # FIX: Adding src="" prevents the missing positional argument crash!
+    # FIX: Adding src="" prevents the local VS Code positional argument crash!
     doc_viewer_image = ft.Image(src="", visible=False, fit="contain", height=450)
 
     doc_viewer_zone = ft.Container(
         content=ft.Column([
             doc_viewer_title,
             doc_viewer_desc,
-            doc_viewer_image
+            doc_viewer_image  # Injects our clean image component block directly
         ], spacing=15),
         padding=20,
         bgcolor="grey50",
