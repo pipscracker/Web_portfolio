@@ -96,8 +96,9 @@ def main(page: ft.Page):
             doc_viewer_button.url = url
             doc_viewer_button.visible = True
             
-            doc_viewer_frame.content = ft.Html(
-                data=f'<iframe src="{embed_url}" width="100%" height="100%" style="border:none;"></iframe>'
+            doc_viewer_frame.content = ft.WebView(
+            url=embed_url,
+            expand=True
             )
             doc_viewer_frame.visible = True
             page.update()
