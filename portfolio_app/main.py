@@ -13,7 +13,7 @@ def main(page: ft.Page):
             ft.Row([
                 ft.Container(
                     content=ft.Image(
-                        src="https://drive.google.com/file/d/1ka94V7GcKnO5vnbRU7cKqKa9nxDz9oh_/view?usp=drivesdk", 
+                        src="https://drive.google.com/uc?export=view&id=1ka94V7GcKnO5vnbRU7cKqKa9nxDz9oh_", 
                         width=120, 
                         height=120, 
                         fit="cover"  
@@ -51,26 +51,14 @@ def main(page: ft.Page):
     doc_viewer_title = ft.Text("Document Showcase", size=18, weight="bold")
     doc_viewer_desc = ft.Text("Click on any course certificate or report button above to preview the document down here.", color="grey600")
     
-    doc_viewer_frame = ft.Container(
-        visible=False, 
-        height=600, 
-        border=ft.Border(
-            top=ft.BorderSide(1, "grey300"),
-            bottom=ft.BorderSide(1, "grey300"),
-            left=ft.BorderSide(1, "grey300"),
-            right=ft.BorderSide(1, "grey300")
-        ), 
-        border_radius=8
-    )
-    # Replaced ElevatedButton with Button to resolve deprecation crashes
-    doc_viewer_button = ft.Button("Open Document in New Tab", icon="open_in_new", visible=False)
+    # Using a native Image control optimized for backward-compatible Flet environments
+    doc_viewer_image = ft.Image(visible=False, fit="contain", height=450)
 
     doc_viewer_zone = ft.Container(
         content=ft.Column([
             doc_viewer_title,
             doc_viewer_desc,
-            doc_viewer_button,
-            doc_viewer_frame
+            doc_viewer_image
         ], spacing=15),
         padding=20,
         bgcolor="grey50",
@@ -81,39 +69,25 @@ def main(page: ft.Page):
             left=ft.BorderSide(1, "grey200"),
             right=ft.BorderSide(1, "grey200")
         ),
-        margin=25 # Safe integer uniform margin setup
+        margin=25
     )
 
     # REUSABLE MATLAB CARD COMPONENT WRAPPER
     def course_card(name, cert_url, report_url):
+        
         def display_doc(e, doc_type, url):
-            # Step A Bypassing: Dynamically extract and swap endpoints 
+            # Step A Conversion: Dynamically extract the File ID and point to the direct image stream stream
             try:
-                # Grabs the text blocks between '/d/' and the next trailing slash/view argument
                 file_id = url.split("/d/")[1].split("/")[0]
                 direct_img_url = f"https://drive.google.com/uc?export=view&id={file_id}"
             except Exception:
-                # Fallback if your link format is already clean or different
                 direct_img_url = url
-
+            
             doc_viewer_title.value = f"Viewing: {name} - {doc_type}"
-            doc_viewer_desc.value = "Displaying official document inline."
-
-            # Ensure doc_viewer_image exists; create if missing
-            nonlocal_vars = globals()
-            if 'doc_viewer_image' not in nonlocal_vars:
-                # create an Image control and add to the frame
-                doc_viewer_image = ft.Image(src=direct_img_url, width=800, height=600, fit="contain")
-                # store in globals so subsequent calls can access
-                globals()['doc_viewer_image'] = doc_viewer_image
-                # attach to frame
-                doc_viewer_frame.content = doc_viewer_image
-                doc_viewer_frame.visible = True
-            else:
-                doc_viewer_image = globals()['doc_viewer_image']
-                doc_viewer_image.src = direct_img_url
-                doc_viewer_frame.visible = True
-
+            doc_viewer_desc.value = "Displaying verification document inline below:"
+            
+            doc_viewer_image.src = direct_img_url
+            doc_viewer_image.visible = True
             page.update()
 
         return ft.Container(
@@ -132,7 +106,7 @@ def main(page: ft.Page):
                         content=ft.Text("Report", size=11, weight="w500", color="black"),
                         bgcolor="white", border_radius=4, padding=6,
                         on_click=lambda e: display_doc(e, "Report", report_url)
-                    ),
+                    ),   
                 ], spacing=8, alignment="center"),
             ], spacing=5, alignment="center", horizontal_alignment="center"),
             padding=10, border_radius=10, bgcolor="blue400",
@@ -206,26 +180,29 @@ def main(page: ft.Page):
         
         ft.Container(
             content=ft.Column([
-                ft.Image(src="cost_formula.png", error_content=ft.Text("Total_Cost = Σ (Q_i × P_i) + Overheads", size=16, weight="bold", color="blue900")),
+                ft.Text("Total_Cost = Σ (Q_i × P_i) + Overheads", size=16, weight="bold", color="blue900"),
                 ft.Text("Where: Q_i = Quantity of material i, P_i = Unit Price of material i.", size=12, italic=True)
             ], horizontal_alignment="center"),
             padding=15,
             bgcolor="grey100",
             border_radius=8
         ),
+        
         ft.Text("Embedded Video Explanation:", weight="w500"),
+        
+        # Completely customized fail-proof layout button container matching flet v0.85.3
         ft.Row([
             ft.Container(
                 content=ft.Row([
                     ft.Icon("play_circle_fill", color="white", size=20),
                     ft.Text("Click to watch the video", color="white", weight="bold", size=14),
-                ], alignment="center", spacing=10, tight=True), 
+                ], alignment="center", spacing=10), 
                 bgcolor="red600",
-                padding=12, # <-- Simple integer uniform padding works everywhere!
+                padding=12,
                 border_radius=8,
                 width=260,
                 height=48, 
-                on_click=lambda e: page.launch_url("https://www.youtube.com")
+                on_click=lambda e: page.launch_url("https://www.youtube.com") 
             )
         ], alignment="start")
     ], spacing=12, visible=False)
@@ -284,23 +261,11 @@ def main(page: ft.Page):
         ft.Text("3. Impact Summary", size=18, weight="bold", color="blue600"),
         ft.Container(
             content=ft.Column([
-                ft.Text(
-                    "Problem Statement & Technical Challenge:", 
-                    weight="bold", size=14, color="blue900"
-                ),
-                ft.Text(
-                    "During the integration phase of the multi-disciplinary engineering estimation engine, major cross-platform compilation deadlocks and data-sync crashes occurred. Mixing core simulation math scripts led to critical runtime environment parsing errors. Additionally, asynchronous calculations within the Civil and Mining sub-modules caused data leakages and UI synchronization stutters, leaving background estimation processes incomplete.",
-                    size=13
-                ),
+                ft.Text("Problem Statement & Technical Challenge:", weight="bold", size=14, color="blue900"),
+                ft.Text("During the integration phase of the multi-disciplinary engineering estimation engine, major cross-platform compilation deadlocks and data-sync crashes occurred. Mixing core simulation math scripts led to critical runtime environment parsing errors. Additionally, asynchronous calculations within the Civil and Mining sub-modules caused data leakages and UI synchronization stutters, leaving background estimation processes incomplete.", size=13),
                 ft.Container(height=5),
-                ft.Text(
-                    "Implemented Solution & Engineering Impact:", 
-                    weight="bold", size=14, color="blue900"
-                ),
-                ft.Text(
-                    "To resolve this, I isolated the cross-language dependencies by tracking down and debugging mixed TypeScript/JavaScript syntax errors across the core processing modules. I stabilized the database and calculation layers by deploying robust Firebase Configuration APIs to securely track engineering data metrics. Finally, I engineered an optimized UI state interval controller ('Countdown Interval Routine') that kept complex metallurgical estimation threads running smoothly in the background, eliminating calculation lags and securing fluid performance across all engineering sub-modules.",
-                    size=13
-                ),
+                ft.Text("Implemented Solution & Engineering Impact:", weight="bold", size=14, color="blue900"),
+                ft.Text("To resolve this, I isolated the cross-language dependencies by tracking down and debugging mixed TypeScript/JavaScript syntax errors across the core processing modules. I stabilized the database and calculation layers by deploying robust Firebase Configuration APIs to securely track engineering data metrics. Finally, I engineered an optimized UI state interval controller ('Countdown Interval Routine') that kept complex metallurgical estimation threads running smoothly in the background, eliminating calculation lags and securing fluid performance across all engineering sub-modules.", size=13),
             ], spacing=8),
             padding=15,
             bgcolor="blue50",
@@ -316,26 +281,26 @@ def main(page: ft.Page):
         github_evidence.visible = index == 3 
         
         for i, btn in enumerate(nav_buttons):
-            btn.style = ft.ButtonStyle(bgcolor="blue600" if i == index else "grey300")
-            btn.color = "white" if i == index else "blue600"
+            # Using standard initialization syntax compatible across old Flet versions
+            if i == index:
+                btn.bgcolor = "blue600"
+                btn.color = "white"
+            else:
+                btn.bgcolor = "grey300"
+                btn.color = "blue600"
         page.update()
 
-    # NAVIGATION DECK CONTROL BUTTONS (Updated to ft.Button)
+    # NAVIGATION DECK CONTROL BUTTONS
     nav_buttons = [
-        ft.Button("Project Timeline", on_click=lambda e: show_tab(0),
-            style=ft.ButtonStyle(bgcolor="blue600"), color="white"),
-        ft.Button("MATLAB Hub", on_click=lambda e: show_tab(1),
-            style=ft.ButtonStyle(bgcolor="grey300"), color="blue600"),
-        ft.Button("Technical Blog", on_click=lambda e: show_tab(2),
-            style=ft.ButtonStyle(bgcolor="grey300"), color="blue600"),
-        ft.Button("GitHub Evidence", on_click=lambda e: show_tab(3),
-            style=ft.ButtonStyle(bgcolor="grey300"), color="blue600"),
+        ft.Container(content=ft.Text("Project Timeline", color="white"), bgcolor="blue600", padding=10, border_radius=5, on_click=lambda e: show_tab(0)),
+        ft.Container(content=ft.Text("MATLAB Hub", color="blue600"), bgcolor="grey300", padding=10, border_radius=5, on_click=lambda e: show_tab(1)),
+        ft.Container(content=ft.Text("Technical Blog", color="blue600"), bgcolor="grey300", padding=10, border_radius=5, on_click=lambda e: show_tab(2)),
+        ft.Container(content=ft.Text("GitHub Evidence", color="blue600"), bgcolor="grey300", padding=10, border_radius=5, on_click=lambda e: show_tab(3)),
     ]
 
     nav = ft.Row(nav_buttons, spacing=10)
     
     page.add(header, nav, ft.Divider(), timeline, matlab, blog, github_evidence)
 
-# Replaced deprecated ft.app with new runtime executor matching your exact stack requirements
 if __name__ == "__main__":
-    ft.run(main)
+    ft.app(target=main)
