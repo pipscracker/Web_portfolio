@@ -1,7 +1,6 @@
 import flet as ft
 
 def main(page: ft.Page):
-    # Core window configuration matching your style preference
     page.title = "My Portfolio"
     page.theme_mode = "light"  
     page.padding = 20
@@ -47,19 +46,18 @@ def main(page: ft.Page):
         ft.Text("- UI layout mockups, debugging component scripts, and resolving data validation issues."),
     ], spacing=8, visible=True)
 
-    # DYNAMIC DOCUMENT VIEWER COMPONENT PLACEHOLDER
-    # DYNAMIC DOCUMENT VIEWER COMPONENT PLACEHOLDER
+    # DYNAMIC DOCUMENT VIEWER COMPONENT PLACEHOLDER (No ft.Html used here)
     doc_viewer_title = ft.Text("Document Showcase", size=18, weight="bold")
     doc_viewer_desc = ft.Text("Click on any course certificate or report button above to preview the document down here.", color="grey600")
     
-    # FIX: Adding src="" prevents the local VS Code positional argument crash!
+    # Adding src="" solves the local VS Code positional argument crash
     doc_viewer_image = ft.Image(src="", visible=False, fit="contain", height=450)
 
     doc_viewer_zone = ft.Container(
         content=ft.Column([
             doc_viewer_title,
             doc_viewer_desc,
-            doc_viewer_image  # Injects our clean image component block directly
+            doc_viewer_image
         ], spacing=15),
         padding=20,
         bgcolor="grey50",
@@ -74,11 +72,9 @@ def main(page: ft.Page):
     )
 
     # REUSABLE MATLAB CARD COMPONENT WRAPPER
-        # REUSABLE MATLAB CARD COMPONENT WRAPPER
     def course_card(name, cert_url, report_url):
         
         def display_doc(e, doc_type, url):
-            # Dynamically extract the Google Drive File ID for inline streaming
             try:
                 file_id = url.split("/d/")[1].split("/")[0]
                 direct_img_url = f"https://drive.google.com/uc?export=view&id={file_id}"
@@ -88,7 +84,7 @@ def main(page: ft.Page):
             doc_viewer_title.value = f"Viewing: {name} - {doc_type}"
             doc_viewer_desc.value = "Displaying verification document inline below:"
             
-            # FIX: Safely update the source property and make it visible
+            # Update source cleanly without touching missing attributes
             doc_viewer_image.src = direct_img_url
             doc_viewer_image.visible = True
             page.update()
@@ -193,7 +189,6 @@ def main(page: ft.Page):
         
         ft.Text("Embedded Video Explanation:", weight="w500"),
         
-        # Completely customized fail-proof layout button container matching flet v0.85.3
         ft.Row([
             ft.Container(
                 content=ft.Row([
@@ -284,7 +279,6 @@ def main(page: ft.Page):
         github_evidence.visible = index == 3 
         
         for i, btn in enumerate(nav_buttons):
-            # Using standard initialization syntax compatible across old Flet versions
             if i == index:
                 btn.bgcolor = "blue600"
                 btn.color = "white"
@@ -293,7 +287,6 @@ def main(page: ft.Page):
                 btn.color = "blue600"
         page.update()
 
-    # NAVIGATION DECK CONTROL BUTTONS
     nav_buttons = [
         ft.Container(content=ft.Text("Project Timeline", color="white"), bgcolor="blue600", padding=10, border_radius=5, on_click=lambda e: show_tab(0)),
         ft.Container(content=ft.Text("MATLAB Hub", color="blue600"), bgcolor="grey300", padding=10, border_radius=5, on_click=lambda e: show_tab(1)),
@@ -302,7 +295,6 @@ def main(page: ft.Page):
     ]
 
     nav = ft.Row(nav_buttons, spacing=10)
-    
     page.add(header, nav, ft.Divider(), timeline, matlab, blog, github_evidence)
 
 if __name__ == "__main__":
