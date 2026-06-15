@@ -189,11 +189,11 @@ def main(page: ft.Page):
         def launch_player(e):
             page.launch_url(target_player_url)
 
-        # FIXED: Using a string literal name="open_video" / name="launch" avoids module attribute missing errors
+        # FIXED: Passing "launch" positionally ensures full compatibility with older Flet versions
         video_view = ft.Container(
             content=ft.Column(
                 [
-                    ft.Icon(name="launch", size=48, color="#1E88E5"),
+                    ft.Icon("launch", size=48, color="#1E88E5"),
                     ft.Text(
                         "Click the button below to open the dedicated project video player page.",
                         size=13,
