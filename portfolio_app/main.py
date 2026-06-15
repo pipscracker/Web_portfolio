@@ -1,4 +1,5 @@
 import flet as ft
+import flet_video as fv
 
 
 def main(page: ft.Page):
@@ -173,30 +174,23 @@ def main(page: ft.Page):
             ),
             padding=0,
         )
-    
     # --------------------------------------------------
-    # VIDEO PLAYER OVERLAY — In-App Responsive Embed
+    # VIDEO PLAYER OVERLAY — Native Extension Implementation
     # --------------------------------------------------
     def open_video_overlay(e=None):
         def close_video(e=None):
             page.overlay.clear()
             page.update()
 
-        # Define the exact video filename located in your assets folder
-        video_filename = "demo.mp4" 
-
-        # Create a responsive HTML iframe string that loads your player locally/production-safely
-        # We enforce 100% width and height so it scales dynamically to the container bounds
-        iframe_html = (
-            f'<iframe src="/video_player.html?v={video_filename}" '
-            f'style="width:100%; height:100%; border:none; border-radius:8px;" '
-            f'allow="fullscreen"></iframe>'
-        )
-
-        # Web-safe control to render the HTML frame directly inside the popup interface
-        video_embed = ft.HtmlEmbed(
-            html=iframe_html,
-            expand=True
+        # FIXED: Using the newly installed flet_video extension.
+        # It reads straight from your assets/ directory seamlessly.
+        video_player = fv.Video(
+            expand=True,
+            playlist=["demo.mp4"], # Replace with your actual filename if needed
+            playlist_mode=fv.PlaylistMode.LOOP,
+            fill_color="black",
+            autoplay=True,
+            volume=1.0,
         )
 
         video_panel = ft.Container(
@@ -212,10 +206,10 @@ def main(page: ft.Page):
                     ),
                     ft.Divider(),
                     ft.Container(
-                        content=video_embed,
-                        height=450,  # Explicitly fits the video dimensions cleanly within the overlay
+                        content=video_player,
+                        height=420,  # Neatly sizes the video element right inside your popup layout
                         border_radius=8,
-                        bgcolor="black", # Clean back-drop framing while loading
+                        clip_behavior="hardEdge",
                     ),
                 ],
                 spacing=8,
@@ -248,6 +242,7 @@ def main(page: ft.Page):
         page.overlay.clear()
         page.overlay.append(video_bg)
         page.update()
+    
 
         # FIXED: Designed a highly professional native UI card to substitute the breaking WebView control
         video_view = ft.Container(
@@ -268,7 +263,7 @@ def main(page: ft.Page):
                     ),
                     ft.ElevatedButton(
                         "Launch Video Player  ↗",
-                        on_click=launch_player,
+                        on_click=open_video_overlay,
                         bgcolor="#1E88E5",
                         color="white",
                         style=ft.ButtonStyle(
