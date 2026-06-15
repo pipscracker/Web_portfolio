@@ -335,25 +335,31 @@ def main(page: ft.Page):
                     ft.Container(
                         content=ft.Column(
                             [
-                                ft.Icon(ft.Icons.PLAY_CIRCLE_OUTLINE, size=60, color="#90CAF9"),
                                 ft.Text(
-                                    "Replace the URL below with your YouTube embed link.",
-                                    size=12,
+                                    "🎬  Click below to open the video player in a new browser tab.",
+                                    size=13,
+                                    color="#424242",
+                                    text_align=ft.TextAlign.CENTER,
+                                ),
+                                ft.Text(
+                                    "Make sure demo.mp4 is in your assets/ folder.",
+                                    size=11,
                                     color="#757575",
                                     text_align=ft.TextAlign.CENTER,
                                 ),
                                 ft.Container(
                                     content=ft.Text(
-                                        "Watch Video ↗",
-                                        size=13,
+                                        "▶  Open Video Player",
+                                        size=14,
                                         weight=ft.FontWeight.W_600,
                                         color="white",
+                                        text_align=ft.TextAlign.CENTER,
                                     ),
                                     bgcolor="#1E88E5",
-                                    border_radius=8,
-                                    padding=ft.Padding(left=20, top=10, right=20, bottom=10),
+                                    border_radius=10,
+                                    padding=ft.Padding(left=24, top=12, right=24, bottom=12),
                                     on_click=lambda e: page.launch_url(
-                                        "https://www.youtube.com/watch?v=YOUR_VIDEO_ID"
+                                        "http://127.0.0.1:8550/video_player.html"
                                     ),
                                     ink=True,
                                 ),
@@ -363,9 +369,9 @@ def main(page: ft.Page):
                             spacing=12,
                         ),
                         bgcolor="#F5F5F5",
-                        border_radius=10,
-                        height=200,
-                        alignment=ft.Alignment(0, 0),     # FIX: was ft.Alignment(0,0)
+                        border_radius=12,
+                        height=180,
+                        alignment=ft.Alignment(0, 0),
                         padding=20,
                     ),
                 ],
@@ -399,14 +405,14 @@ def main(page: ft.Page):
                         "Verified log updates and source tracking metrics mapped directly back to the main branch repository Architecture:",
                         size=13,
                     ),
-                    log_image_card("Commit History Log", "assets/commit_history.png"),
+                    log_image_card("Commit History Log", "commit_history.png"),
                     ft.Container(height=8),
                     ft.Text("2. Pull Request Logs", size=16, weight=ft.FontWeight.BOLD, color="#1976D2"),
                     ft.Text(
                         "Detailed features proposed, structured code reviews performed, and team merges completed successfully:",
                         size=13,
                     ),
-                    log_image_card("Pull Request Logs", "assets/pr_logs.png"),
+                    log_image_card("Pull Request Logs", "pr_logs.png"),
                     ft.Container(height=8),
                     ft.Text("3. Impact Summary", size=16, weight=ft.FontWeight.BOLD, color="#1976D2"),
                     ft.Container(
