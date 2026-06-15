@@ -23,7 +23,7 @@ def main(page: ft.Page):
     )
     doc_viewer_image = ft.Image(
         src="",
-        fit=ft.ImageFit.CONTAIN,
+        fit="contain",
         visible=False,
         expand=True,
     )
