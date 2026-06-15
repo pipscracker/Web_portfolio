@@ -336,13 +336,41 @@ def main(page: ft.Page):
                     ),
                     ft.Container(height=10),
                     ft.Text("Embedded Video on project contribution:", weight=ft.FontWeight.BOLD, size=14),
-                    # ---- FIX: use ft.Video instead of ft.WebView ----
-                    ft.Video(
-                        playlist=[ft.VideoMedia("assets/demo.mp4")],
-                        width=700,
-                        height=360,
-                        autoplay=False,
-                        show_controls=True,
+                    ft.Container(
+                        content=ft.Column(
+                            [
+                                ft.Text(
+                                    "🎬  Click below to watch the project contribution video.",
+                                    size=13,
+                                    color="#424242",
+                                    text_align=ft.TextAlign.CENTER,
+                                ),
+                                ft.Container(
+                                    content=ft.Text(
+                                        "▶  Open Video Player",
+                                        size=14,
+                                        weight=ft.FontWeight.W_600,
+                                        color="white",
+                                        text_align=ft.TextAlign.CENTER,
+                                    ),
+                                    bgcolor="#1E88E5",
+                                    border_radius=10,
+                                    padding=ft.Padding(left=24, top=12, right=24, bottom=12),
+                                    on_click=lambda e: page.launch_url(
+                                        "http://127.0.0.1:8550/video_player.html"  # ← no popup, same tab
+                                    ),
+                                    ink=True,
+                                ),
+                            ],
+                            alignment=ft.MainAxisAlignment.CENTER,
+                            horizontal_alignment=ft.CrossAxisAlignment.CENTER,
+                            spacing=12,
+                        ),
+                        bgcolor="#F5F5F5",
+                        border_radius=12,
+                        height=180,
+                        alignment=ft.Alignment(0, 0),
+                        padding=20,
                     ),
                 ],
                 spacing=12,
