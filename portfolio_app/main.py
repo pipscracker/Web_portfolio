@@ -26,19 +26,19 @@ def main(page: ft.Page):
         alignment=ft.Alignment(0, 0),
         bgcolor="grey200",
         border_radius=10,
-        height=450,
+        height=500,
         expand=True,
         padding=15,
     )
 
     # --------------------------------------------------
     # DOCUMENT DISPLAY LOGIC
-    # Works on both desktop and web (flet 0.85.3 / Pyodide)
-    # Uses ft.Image for images — no ft.Html / ft.HtmlIframe needed
-    # Google Drive thumbnail URL is publicly accessible cross-origin
+    # PDFs from Google Drive are embedded via the /preview URL
+    # using ft.WebView — renders as an iframe in the browser,
+    # and as a native webview on desktop.
     # --------------------------------------------------
-    def make_drive_image_url(url: str) -> str:
-        """Convert any Google Drive share link to a thumbnail URL embeddable as an image."""
+    def make_drive_preview_url(url: str) -> str:
+        """Convert any Google Drive share link to the embeddable /preview URL."""
         try:
             if "/d/" in url:
                 file_id = url.split("/d/")[1].split("/")[0]
@@ -46,16 +46,14 @@ def main(page: ft.Page):
                 file_id = url.split("id=")[1].split("&")[0]
             else:
                 return url
-            # sz=w1200 gives full-width resolution; works without login for shared files
-            return f"https://drive.google.com/thumbnail?id={file_id}&sz=w1200"
+            return f"https://drive.google.com/file/d/{file_id}/preview"
         except Exception:
             return url
 
     def display_doc(name: str, doc_type: str, url: str):
-        # Guard: placeholder URL not yet replaced
         if "YOUR_GOOGLE_DRIVE" in url or url.strip() == "":
             doc_viewer_title.value = "⚠️ No link set"
-            doc_viewer_desc.value = f"Replace the placeholder URL for '{name}' with a real Google Drive share link."
+            doc_viewer_desc.value = f"Replace the placeholder URL for '{name}'."
             doc_viewer_frame.content = ft.Text(
                 "Add your Google Drive link in the course_card() call.",
                 color="red400",
@@ -64,28 +62,16 @@ def main(page: ft.Page):
             page.update()
             return
 
-        if url.startswith("http"):
-            image_url = make_drive_image_url(url)
-            doc_viewer_frame.content = ft.Image(
-                src=image_url,
-                fit=ft.ImageFit.CONTAIN,
-                expand=True,
-                error_content=ft.Text(
-                    "⚠️ Could not load image.\nMake sure the file is shared publicly on Google Drive.",
-                    color="red400",
-                    text_align=ft.TextAlign.CENTER,
-                ),
-            )
-        else:
-            # Local asset file
-            doc_viewer_frame.content = ft.Image(
-                src=f"/{url.lstrip('/')}",
-                fit=ft.ImageFit.CONTAIN,
-                expand=True,
-            )
+        preview_url = make_drive_preview_url(url)
 
         doc_viewer_title.value = f"Viewing: {name} — {doc_type}"
-        doc_viewer_desc.value = "Scroll or zoom to inspect the document."
+        doc_viewer_desc.value = "Document loading below (make sure the file is shared publicly)."
+
+        # ft.WebView renders as iframe in browser, native WebView on desktop
+        doc_viewer_frame.content = ft.WebView(
+            url=preview_url,
+            expand=True,
+        )
         page.update()
 
     # --------------------------------------------------
@@ -206,13 +192,41 @@ def main(page: ft.Page):
     def build_matlab_tab():
         courses_grid = ft.Row(
             controls=[
-                course_card("MATLAB Onramp",                           "YOUR_GOOGLE_DRIVE_CERT_LINK_1", "YOUR_GOOGLE_DRIVE_REPORT_LINK_1"),
-                course_card("Simulink Onramp",                         "YOUR_GOOGLE_DRIVE_CERT_LINK_2", "YOUR_GOOGLE_DRIVE_REPORT_LINK_2"),
-                course_card("Calculations with Vectors\nand Matrices", "YOUR_GOOGLE_DRIVE_CERT_LINK_3", "YOUR_GOOGLE_DRIVE_REPORT_LINK_3"),
-                course_card("Make and Manipulate Matrices",            "YOUR_GOOGLE_DRIVE_CERT_LINK_4", "YOUR_GOOGLE_DRIVE_REPORT_LINK_4"),
-                course_card("Explore Data with MATLAB Plots",          "YOUR_GOOGLE_DRIVE_CERT_LINK_5", "YOUR_GOOGLE_DRIVE_REPORT_LINK_5"),
-                course_card("Wireless Communications\nOnramp",         "YOUR_GOOGLE_DRIVE_CERT_LINK_6", "YOUR_GOOGLE_DRIVE_REPORT_LINK_6"),
-                course_card("Machine Learning Onramp",                 "YOUR_GOOGLE_DRIVE_CERT_LINK_7", "YOUR_GOOGLE_DRIVE_REPORT_LINK_7"),
+                course_card(
+                    "MATLAB Onramp",
+                    "https://drive.google.com/file/d/1TM1m1WPlafXRTWPksWGXz-BRCKIMGg8f/view?usp=drive_link",
+                    "https://drive.google.com/file/d/1bVQbldVf0MLGgGbebD0SBrKq5TXXmXoZ/view?usp=drive_link"
+                ),
+                course_card(
+                    "Simulink Onramp",
+                    "https://drive.google.com/file/d/1susucT9qSVG8HOSifw-nsye4HhWnr4qA/view?usp=drive_link",
+                    "https://drive.google.com/file/d/15YsdS3ljtY0lKfAt1KnLBdxsDuDXpBU_/view?usp=drive_link"
+                ),
+                course_card(
+                    "Calculations with Vectors\nand Matrices",
+                    "https://drive.google.com/file/d/1tLh2bpIYwulD5uHZEEW4mzkBFaC5smoS/view?usp=drive_link",
+                    "https://drive.google.com/file/d/1wngp-XVqnvCtYTtCVNeFapEypH6rqODt/view?usp=drive_link"
+                ),
+                course_card(
+                    "Make and Manipulate Matrices",
+                    "https://drive.google.com/file/d/15rPC-WyKnU30nZPPPEPKLE3OtXRzjc7c/view?usp=drive_link",
+                    "https://drive.google.com/file/d/1kWXR3r3h_dNRksWqpnGaJoO3puz49ow0/view?usp=drive_link"
+                ),
+                course_card(
+                    "Explore Data with MATLAB Plots",
+                    "https://drive.google.com/file/d/1a7h-ZjRK4WbEKdBkb9vtWOxUWbUeazto/view?usp=drive_link",
+                    "https://drive.google.com/file/d/1qH3xnAN99Zeo_uUmdZaAs9raEDoXWOSo/view?usp=drive_link"
+                ),
+                course_card(
+                    "Wireless Communications\nOnramp",
+                    "https://drive.google.com/file/d/1Y0DE6wGDozeZPm5sJDg6_T5MRdjMPgS5/view?usp=drive_link",
+                    "https://drive.google.com/file/d/1BvdHNeaCp24rYq42Vs2GHPSLY2uOEyAk/view?usp=drive_link"
+                ),
+                course_card(
+                    "Machine Learning Onramp",
+                    "https://drive.google.com/file/d/1JobPmk9J57UFfKxRrQ0nc9jEjkhszGOG/view?usp=drive_link",
+                    "https://drive.google.com/file/d/1vI24rs8Wi2C4waV16Tnxwjcp1MgX2TZD/view?usp=drive_link"
+                ),
             ],
             spacing=15,
             wrap=True,
@@ -243,7 +257,7 @@ def main(page: ft.Page):
                 ft.Container(height=10),
                 ft.Text("Document Showcase", size=16, weight=ft.FontWeight.BOLD),
                 ft.Text(
-                    "Click on any course certificate or report button above to preview the document down here.",
+                    "Click on any course certificate or report button above to preview the document below.",
                     size=13,
                     color="grey600",
                 ),
@@ -296,13 +310,11 @@ def main(page: ft.Page):
                 ),
                 ft.Container(height=10),
                 ft.Text("Embedded Video Explanation:", weight=ft.FontWeight.BOLD, size=14),
-                # To embed a real YouTube video, replace this container with:
-                # ft.WebView(url="https://www.youtube.com/embed/YOUR_VIDEO_ID", expand=True, height=300)
                 ft.Container(
                     content=ft.Column([
                         ft.Text("▶", size=48, color="blue300"),
                         ft.Text(
-                            "Add your YouTube embed URL here.\nReplace this with ft.WebView(url='https://www.youtube.com/embed/VIDEO_ID')",
+                            "Replace this with:\nft.WebView(url='https://www.youtube.com/embed/YOUR_VIDEO_ID', height=300, expand=True)",
                             size=12,
                             color="grey600",
                             text_align=ft.TextAlign.CENTER,
@@ -419,8 +431,7 @@ def main(page: ft.Page):
         expand=True,
     )
 
-    # Default tab on load
-    switch_tab(1)
+    switch_tab(1)  # default to MATLAB Hub
 
     page.add(
         ft.Container(
