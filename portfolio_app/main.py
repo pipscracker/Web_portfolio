@@ -175,33 +175,33 @@ def main(page: ft.Page):
         )
 
     # --------------------------------------------------
-    # VIDEO PLAYER OVERLAY — Patched workaround for missing WebView support
+    # VIDEO PLAYER OVERLAY — Uses page.launch_url for maximum environment compatibility
     # --------------------------------------------------
     def open_video_overlay(e=None):
         def close_video(e=None):
             page.overlay.clear()
             page.update()
 
-        # Safely obtain the HTTP reference location
+        # Converts WebSocket URLs dynamically to stable web links
         http_base_url = page.url.replace("ws://", "http://").replace("wss://", "https://")
         target_player_url = f"{http_base_url}/video_player.html"
 
         def launch_player(e):
             page.launch_url(target_player_url)
 
-        # FIX: Replaced ft.WebView with a container redirection card compatible with older Flet versions
+        # FIXED: Replacing WebView with a clean launch container card to support older Flet environments safely
         video_view = ft.Container(
             content=ft.Column(
                 [
                     ft.Icon(ft.icons.OPEN_IN_NEW, size=48, color="#1E88E5"),
                     ft.Text(
-                        "Your current application host environment requires the video player to load in an independent tab.",
+                        "Click the button below to open the dedicated project video player page.",
                         size=13,
                         text_align=ft.TextAlign.CENTER,
                         color="#424242",
                     ),
                     ft.ElevatedButton(
-                        "Launch Player Tab",
+                        "Launch Video Player",
                         on_click=launch_player,
                         bgcolor="#1E88E5",
                         color="white",
