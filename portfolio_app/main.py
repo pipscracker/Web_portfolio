@@ -330,7 +330,9 @@ def main(page: ft.Page):
                                     border_radius=10,
                                     padding=ft.Padding(left=24, top=12, right=24, bottom=12),
                                     on_click=lambda e: page.launch_url(
-                                        "http://127.0.0.1:8550/video_player.html"
+                                        page.url.rstrip("/") + "/video_player.html"
+                                        if hasattr(page, "url") and page.url
+                                        else "/video_player.html"
                                     ),
                                     ink=True,
                                 ),
