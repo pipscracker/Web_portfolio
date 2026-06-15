@@ -189,7 +189,7 @@ def main(page: ft.Page):
         def launch_player(e):
             page.launch_url(target_player_url)
 
-        # FIXED: Passing "launch" positionally ensures full compatibility with older Flet versions
+        # FIXED: "launch" is passed as a positional argument for maximum compatibility
         video_view = ft.Container(
             content=ft.Column(
                 [
