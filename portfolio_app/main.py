@@ -175,56 +175,28 @@ def main(page: ft.Page):
         )
     
     # --------------------------------------------------
-    # VIDEO PLAYER OVERLAY — Web-Safe Redirect Interface
+    # VIDEO PLAYER OVERLAY — In-App Responsive Embed
     # --------------------------------------------------
     def open_video_overlay(e=None):
         def close_video(e=None):
             page.overlay.clear()
             page.update()
 
-        # FIXED: Declare the action function using modern async await syntax
-        async def launch_player(e):
-            video_filename = "demo.mp4" # Replace with your actual filename if needed
-            target_player_url = f"/video_player.html?v={video_filename}"
-            # FIXED: Avoids runtime warnings by calling the updated URL launcher correctly
-            await page.open_url_async(target_player_url)
+        # Define the exact video filename located in your assets folder
+        video_filename = "demo.mp4" 
 
-        video_view = ft.Container(
-            content=ft.Column(
-                [
-                    ft.Icon("play_circle_filled", size=64, color="#1E88E5"),
-                    ft.Text(
-                        "Project Video Demonstration",
-                        size=16,
-                        weight=ft.FontWeight.BOLD,
-                        color="#1565C0",
-                    ),
-                    ft.Text(
-                        "Click the button below to launch the dedicated interactive HTML5 video player tab.",
-                        size=13,
-                        text_align=ft.TextAlign.CENTER,
-                        color="#424242",
-                    ),
-                    ft.Container(height=8),
-                    ft.ElevatedButton(
-                        "Launch Video Player  ↗",
-                        on_click=launch_player,  # FIXED: Now correctly references the function above
-                        bgcolor="#1E88E5",
-                        color="white",
-                        style=ft.ButtonStyle(
-                            padding=ft.Padding.all(14),
-                        )
-                    ),
-                ],
-                alignment=ft.MainAxisAlignment.CENTER,
-                horizontal_alignment=ft.CrossAxisAlignment.CENTER,
-                spacing=10,
-            ),
-            bgcolor="#F5F5F5",
-            border_radius=8,
-            padding=24,
-            expand=True,
-            alignment=ft.Alignment(0, 0),
+        # Create a responsive HTML iframe string that loads your player locally/production-safely
+        # We enforce 100% width and height so it scales dynamically to the container bounds
+        iframe_html = (
+            f'<iframe src="/video_player.html?v={video_filename}" '
+            f'style="width:100%; height:100%; border:none; border-radius:8px;" '
+            f'allow="fullscreen"></iframe>'
+        )
+
+        # Web-safe control to render the HTML frame directly inside the popup interface
+        video_embed = ft.HtmlEmbed(
+            html=iframe_html,
+            expand=True
         )
 
         video_panel = ft.Container(
@@ -240,10 +212,10 @@ def main(page: ft.Page):
                     ),
                     ft.Divider(),
                     ft.Container(
-                        content=video_view,
-                        height=420,
+                        content=video_embed,
+                        height=450,  # Explicitly fits the video dimensions cleanly within the overlay
                         border_radius=8,
-                        clip_behavior="hardEdge",
+                        bgcolor="black", # Clean back-drop framing while loading
                     ),
                 ],
                 spacing=8,
