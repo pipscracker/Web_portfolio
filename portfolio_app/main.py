@@ -175,7 +175,7 @@ def main(page: ft.Page):
         )
 
     # --------------------------------------------------
-    # VIDEO PLAYER OVERLAY — Uses page.launch_url for maximum environment compatibility
+    # VIDEO PLAYER OVERLAY — Safe compatibility patch
     # --------------------------------------------------
     def open_video_overlay(e=None):
         def close_video(e=None):
@@ -189,11 +189,11 @@ def main(page: ft.Page):
         def launch_player(e):
             page.launch_url(target_player_url)
 
-        # FIXED: Replacing WebView with a clean launch container card to support older Flet environments safely
+        # FIXED: Using a string literal name="open_video" / name="launch" avoids module attribute missing errors
         video_view = ft.Container(
             content=ft.Column(
                 [
-                    ft.Icon(ft.icons.OPEN_IN_NEW, size=48, color="#1E88E5"),
+                    ft.Icon(name="launch", size=48, color="#1E88E5"),
                     ft.Text(
                         "Click the button below to open the dedicated project video player page.",
                         size=13,
