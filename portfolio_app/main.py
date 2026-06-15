@@ -175,46 +175,27 @@ def main(page: ft.Page):
         )
 
     # --------------------------------------------------
-    # VIDEO PLAYER OVERLAY — Safe compatibility patch
+    # VIDEO PLAYER OVERLAY — Secure Web Path Resolution
     # --------------------------------------------------
     def open_video_overlay(e=None):
         def close_video(e=None):
             page.overlay.clear()
             page.update()
 
-        # Converts WebSocket URLs dynamically to stable web links
-        http_base_url = page.url.replace("ws://", "http://").replace("wss://", "https://")
-        target_player_url = f"{http_base_url}/video_player.html"
+        # 1. Standardize websocket hosting paths into true HTTP/HTTPS web links
+        base_url = page.url.replace("ws://", "http://").replace("wss://", "https://")
+        if not base_url.endswith("/"):
+            base_url += "/"
+        
+        # 2. FIXED: Access video_player.html from the root context direct path
+        target_player_url = f"{base_url}video_player.html"
 
-        def launch_player(e):
+        def launch_external(e):
             page.launch_url(target_player_url)
 
-        # FIXED: Changed from ft.alignment.center to ft.Alignment(0, 0) for version compatibility
-        video_view = ft.Container(
-            content=ft.Column(
-                [
-                    ft.Icon("launch", size=48, color="#1E88E5"),
-                    ft.Text(
-                        "Click the button below to open the dedicated project video player page.",
-                        size=13,
-                        text_align=ft.TextAlign.CENTER,
-                        color="#424242",
-                    ),
-                    ft.ElevatedButton(
-                        "Launch Video Player",
-                        on_click=launch_player,
-                        bgcolor="#1E88E5",
-                        color="white",
-                    ),
-                ],
-                alignment=ft.MainAxisAlignment.CENTER,
-                horizontal_alignment=ft.CrossAxisAlignment.CENTER,
-                spacing=15,
-            ),
-            alignment=ft.Alignment(0, 0),
+        video_view = ft.WebView(
+            url=target_player_url,
             expand=True,
-            bgcolor="#F5F5F5",
-            padding=20,
         )
 
         video_panel = ft.Container(
@@ -224,6 +205,8 @@ def main(page: ft.Page):
                         [
                             ft.Text("Project Video", size=15, weight=ft.FontWeight.BOLD, color="#1565C0"),
                             ft.Container(expand=True),
+                            # Secondary full window button link if browser frame security blocks rendering
+                            ft.IconButton(icon=ft.icons.LAUNCH, icon_size=16, tooltip="Open in full tab", on_click=launch_external),
                             ft.TextButton("✕  Close", on_click=close_video),
                         ],
                         alignment=ft.MainAxisAlignment.SPACE_BETWEEN,
