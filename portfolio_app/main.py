@@ -93,7 +93,7 @@ def main(page: ft.Page):
                             color="white",
                         ),
                         height=40,
-                        alignment=ft.Alignment(0, 0),   # FIX: was ft.Alignment(0,0)
+                        alignment=ft.Alignment(0, 0),
                     ),
                     ft.Row(
                         [
@@ -134,7 +134,7 @@ def main(page: ft.Page):
             ),
             padding=10,
             border_radius=10,
-            bgcolor="#42A5F5",    # FIX: was "blue400"
+            bgcolor="#42A5F5",
             width=210,
             height=115,
         )
@@ -150,20 +150,20 @@ def main(page: ft.Page):
                         title,
                         weight=ft.FontWeight.BOLD,
                         size=14,
-                        color="#1565C0",          # FIX: was "blue800"
+                        color="#1565C0",
                         text_align=ft.TextAlign.LEFT,
                     ),
                     ft.Container(
                         content=ft.Image(
                             src=image_path,
-                            fit="contain",        # FIX: was "contain" but still good
+                            fit="contain",
                             border_radius=8,
-                            height=300,                     # FIX: CRITICAL — missing height caused crash
-                            expand=True,             # let it stretch horizontally
+                            height=300,
+                            expand=True,
                         ),
-                        border=ft.Border(left=ft.BorderSide(1,"#E0E0E0"),right=ft.BorderSide(1,"#E0E0E0"),top=ft.BorderSide(1,"#E0E0E0"),bottom=ft.BorderSide(1,"#E0E0E0")),  # FIX: was manual Border() construction
+                        border=ft.Border(left=ft.BorderSide(1,"#E0E0E0"),right=ft.BorderSide(1,"#E0E0E0"),top=ft.BorderSide(1,"#E0E0E0"),bottom=ft.BorderSide(1,"#E0E0E0")),
                         border_radius=8,
-                        bgcolor="#F5F5F5",        # FIX: was "grey100"
+                        bgcolor="#F5F5F5",
                         padding=8,
                         clip_behavior="hardEdge",
                     ),
@@ -171,7 +171,7 @@ def main(page: ft.Page):
                 spacing=8,
                 horizontal_alignment=ft.CrossAxisAlignment.START,
             ),
-            padding=0,                                      # FIX: was ft.Padding(0,0,0,0) — just use 0
+            padding=0,
         )
 
     # ==================================================
@@ -286,7 +286,7 @@ def main(page: ft.Page):
                         "Confidence in Concepts",
                         size=18,
                         weight=ft.FontWeight.BOLD,
-                        color="#1976D2",          # FIX: was "blue700"
+                        color="#1976D2",
                     ),
                     ft.Divider(),
                     ft.Text(
@@ -319,66 +319,30 @@ def main(page: ft.Page):
                                     "Total_Cost = Σ (Qᵢ × Pᵢ) + Overheads",
                                     size=16,
                                     weight=ft.FontWeight.BOLD,
-                                    color="#1976D2",  # FIX: was "blue700"
+                                    color="#1976D2",
                                 ),
                                 ft.Text(
                                     "Where: Qᵢ = Quantity of material i,  Pᵢ = Unit Price of material i",
                                     size=12,
-                                    color="#757575",  # FIX: was "grey600"
+                                    color="#757575",
                                     italic=True,
                                 ),
                             ],
                             spacing=4,
                         ),
-                        bgcolor="#E3F2FD",         # FIX: was "blue50"
+                        bgcolor="#E3F2FD",
                         border_radius=8,
-                        padding=ft.Padding(left=20, top=12, right=20, bottom=12),  # FIX: cleaner padding
+                        padding=ft.Padding(left=20, top=12, right=20, bottom=12),
                     ),
                     ft.Container(height=10),
                     ft.Text("Embedded Video on project contribution:", weight=ft.FontWeight.BOLD, size=14),
-                    ft.Container(
-                        content=ft.Column(
-                            [
-                                ft.Text(
-                                    "🎬  Click below to open the video player in a new browser tab.",
-                                    size=13,
-                                    color="#424242",
-                                    text_align=ft.TextAlign.CENTER,
-                                ),
-                                ft.Text(
-                                    size=11,
-                                    color="#757575",
-                                    text_align=ft.TextAlign.CENTER,
-                                ),
-                                ft.Container(
-                                    content=ft.Text(
-                                        "▶  Open Video Player",
-                                        size=14,
-                                        weight=ft.FontWeight.W_600,
-                                        color="white",
-                                        text_align=ft.TextAlign.CENTER,
-                                    ),
-                                    bgcolor="#1E88E5",
-                                    border_radius=10,
-                                    padding=ft.Padding(left=24, top=12, right=24, bottom=12),
-                                    on_click=lambda e: page.launch_url(
-                                        "video_player.html",
-                                        web_popup_window=True,
-                                        web_popup_window_width=900,
-                                        web_popup_window_height=520,
-                                    ),
-                                    ink=True,
-                                ),
-                            ],
-                            alignment=ft.MainAxisAlignment.CENTER,
-                            horizontal_alignment=ft.CrossAxisAlignment.CENTER,
-                            spacing=12,
-                        ),
-                        bgcolor="#F5F5F5",
-                        border_radius=12,
-                        height=180,
-                        alignment=ft.Alignment(0, 0),
-                        padding=20,
+                    # ---- FIX: use ft.Video instead of ft.WebView ----
+                    ft.Video(
+                        playlist=[ft.VideoMedia("assets/demo.mp4")],
+                        width=700,
+                        height=360,
+                        autoplay=False,
+                        show_controls=True,
                     ),
                 ],
                 spacing=12,
@@ -441,7 +405,7 @@ def main(page: ft.Page):
                         ),
                         bgcolor="#E3F2FD",
                         border_radius=8,
-                        padding=ft.Padding(left=16, top=14, right=16, bottom=14),  # FIX: was ft.Padding()
+                        padding=ft.Padding(left=16, top=14, right=16, bottom=14),
                     ),
                 ],
                 spacing=12,
@@ -470,7 +434,7 @@ def main(page: ft.Page):
             content=ft.Text(name, size=13, weight=ft.FontWeight.W_500, color="#424242"),
             bgcolor="#EEEEEE",
             border_radius=20,
-            padding=ft.Padding(left=16, top=8, right=16, bottom=8),  # FIX: was ft.Padding()
+            padding=ft.Padding(left=16, top=8, right=16, bottom=8),
             on_click=lambda e, idx=i: switch_tab(idx),
             ink=True,
         )
@@ -504,7 +468,7 @@ def main(page: ft.Page):
         bgcolor="#1E88E5",
         padding=20,
         border_radius=15,
-        alignment=ft.Alignment(0, 0),    # FIX: was ft.Alignment(0,0)
+        alignment=ft.Alignment(0, 0),
         expand=True,
     )
 
