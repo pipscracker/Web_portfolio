@@ -8,51 +8,35 @@ def main(page: ft.Page):
     page.theme_mode = ft.ThemeMode.LIGHT
 
     # --------------------------------------------------
-    # DOCUMENT VIEWER STATE
-    # --------------------------------------------------
-    doc_viewer_title = ft.Text(
-        value="Document Viewer",
-        size=16,
-        weight=ft.FontWeight.BOLD,
-        color="#1565C0",          # FIX: was "blue800" (invalid string)
-    )
-    doc_viewer_desc = ft.Text(
-        value="Select a certificate or report below to view it instantly.",
-        size=13,
-        color="#616161",          # FIX: was "grey700"
-    )
-    doc_viewer_image = ft.Image(
-        src="",
-        fit="contain",           # FIX: was string "contain"
-        visible=False,
-        expand=True,
-    )
-    doc_viewer_placeholder = ft.Text("No document selected", color="#9E9E9E")  # FIX: color string
-
-    doc_viewer_frame = ft.Container(
-        content=ft.Column(
-            [doc_viewer_placeholder, doc_viewer_image],
-            alignment=ft.MainAxisAlignment.CENTER,
-            horizontal_alignment=ft.CrossAxisAlignment.CENTER,
-            expand=True,
-        ),
-        alignment=ft.Alignment(0, 0),     # FIX: was ft.Alignment(0, 0) — use ft.alignment.center
-        bgcolor="#EEEEEE",        # FIX: was "grey200"
-        border_radius=10,
-        height=500,
-        expand=True,
-        padding=15,
-    )
-
-    # --------------------------------------------------
-    # DISPLAY LOGIC
+    # DISPLAY LOGIC — opens a dialog overlay to show doc
     # --------------------------------------------------
     def display_doc(name: str, doc_type: str, image_path: str):
-        doc_viewer_title.value = f"Viewing: {name} — {doc_type}"
-        doc_viewer_desc.value = "Document image loaded from local assets."
-        doc_viewer_placeholder.visible = False
-        doc_viewer_image.src = image_path
-        doc_viewer_image.visible = True
+        def close_dlg(e):
+            dlg.open = False
+            page.update()
+
+        dlg = ft.AlertDialog(
+            modal=True,
+            title=ft.Text(f"{name} — {doc_type}", size=15, weight=ft.FontWeight.BOLD, color="#1565C0"),
+            content=ft.Container(
+                content=ft.Image(
+                    src=image_path,
+                    fit="contain",
+                    expand=True,
+                ),
+                width=700,
+                height=500,
+                bgcolor="#EEEEEE",
+                border_radius=8,
+                padding=10,
+            ),
+            actions=[
+                ft.TextButton("Close", on_click=close_dlg),
+            ],
+            actions_alignment=ft.MainAxisAlignment.END,
+        )
+        page.dialog = dlg
+        dlg.open = True
         page.update()
 
     # --------------------------------------------------
@@ -237,31 +221,18 @@ def main(page: ft.Page):
             alignment=ft.MainAxisAlignment.CENTER,
         )
 
-        viewer_panel = ft.Container(
-            content=ft.Column(
-                [doc_viewer_title, doc_viewer_desc, doc_viewer_frame],
-                spacing=10,
-            ),
-            padding=15,
-            border=ft.Border(left=ft.BorderSide(1,"#E0E0E0"),right=ft.BorderSide(1,"#E0E0E0"),top=ft.BorderSide(1,"#E0E0E0"),bottom=ft.BorderSide(1,"#E0E0E0")),   # FIX: was manual Border() construction
-            border_radius=10,
-        )
-
         return ft.Container(
             content=ft.Column(
                 [
                     ft.Text("MATLAB Achievement Hub", size=22, weight=ft.FontWeight.BOLD),
                     ft.Divider(),
                     ft.Text("Completed Courses :", size=14, color="#616161"),
-                    courses_grid,
-                    ft.Container(height=10),
-                    ft.Text("Document Showcase", size=16, weight=ft.FontWeight.BOLD),
                     ft.Text(
-                        "Click on any course certificate or report button above to preview the document below.",
+                        "Click Certificate or Report on any course card to view it.",
                         size=13,
                         color="#757575",
                     ),
-                    viewer_panel,
+                    courses_grid,
                 ],
                 spacing=15,
                 horizontal_alignment=ft.CrossAxisAlignment.START,
