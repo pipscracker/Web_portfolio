@@ -23,7 +23,7 @@ def main(page: ft.Page):
     )
     doc_viewer_image = ft.Image(
         src="",
-        fit=ft.ImageFit.CONTAIN,           # FIX: was string "contain"
+        fit="contain",           # FIX: was string "contain"
         visible=False,
         expand=True,
     )
@@ -36,7 +36,7 @@ def main(page: ft.Page):
             horizontal_alignment=ft.CrossAxisAlignment.CENTER,
             expand=True,
         ),
-        alignment=ft.alignment.center,     # FIX: was ft.Alignment(0, 0) — use ft.alignment.center
+        alignment=ft.Alignment(0, 0),     # FIX: was ft.Alignment(0, 0) — use ft.alignment.center
         bgcolor="#EEEEEE",        # FIX: was "grey200"
         border_radius=10,
         height=500,
@@ -77,7 +77,7 @@ def main(page: ft.Page):
                             color="white",
                         ),
                         height=40,
-                        alignment=ft.alignment.center,   # FIX: was ft.Alignment(0,0)
+                        alignment=ft.Alignment(0, 0),   # FIX: was ft.Alignment(0,0)
                     ),
                     ft.Row(
                         [
@@ -140,16 +140,16 @@ def main(page: ft.Page):
                     ft.Container(
                         content=ft.Image(
                             src=image_path,
-                            fit=ft.ImageFit.CONTAIN,        # FIX: was ft.ImageFit.CONTAIN but still good
+                            fit="contain",        # FIX: was "contain" but still good
                             border_radius=8,
                             height=300,                     # FIX: CRITICAL — missing height caused crash
-                            width=float("inf"),             # let it stretch horizontally
+                            expand=True,             # let it stretch horizontally
                         ),
-                        border=ft.border.all(1, "#E0E0E0"),  # FIX: was manual Border() construction
+                        border=ft.Border(left=ft.BorderSide(1,"#E0E0E0"),right=ft.BorderSide(1,"#E0E0E0"),top=ft.BorderSide(1,"#E0E0E0"),bottom=ft.BorderSide(1,"#E0E0E0")),  # FIX: was manual Border() construction
                         border_radius=8,
                         bgcolor="#F5F5F5",        # FIX: was "grey100"
                         padding=8,
-                        clip_behavior=ft.ClipBehavior.HARD_EDGE,
+                        clip_behavior="hardEdge",
                     ),
                 ],
                 spacing=8,
@@ -243,7 +243,7 @@ def main(page: ft.Page):
                 spacing=10,
             ),
             padding=15,
-            border=ft.border.all(1, "#E0E0E0"),   # FIX: was manual Border() construction
+            border=ft.Border(left=ft.BorderSide(1,"#E0E0E0"),right=ft.BorderSide(1,"#E0E0E0"),top=ft.BorderSide(1,"#E0E0E0"),bottom=ft.BorderSide(1,"#E0E0E0")),   # FIX: was manual Border() construction
             border_radius=10,
         )
 
@@ -328,7 +328,7 @@ def main(page: ft.Page):
                         ),
                         bgcolor="#E3F2FD",         # FIX: was "blue50"
                         border_radius=8,
-                        padding=ft.padding.symmetric(horizontal=20, vertical=12),  # FIX: cleaner padding
+                        padding=ft.Padding(left=20, top=12, right=20, bottom=12),  # FIX: cleaner padding
                     ),
                     ft.Container(height=10),
                     ft.Text("Embedded Video Explanation:", weight=ft.FontWeight.BOLD, size=14),
@@ -351,7 +351,7 @@ def main(page: ft.Page):
                                     ),
                                     bgcolor="#1E88E5",
                                     border_radius=8,
-                                    padding=ft.padding.symmetric(horizontal=20, vertical=10),
+                                    padding=ft.Padding(left=20, top=10, right=20, bottom=10),
                                     on_click=lambda e: page.launch_url(
                                         "https://www.youtube.com/watch?v=YOUR_VIDEO_ID"
                                     ),
@@ -365,7 +365,7 @@ def main(page: ft.Page):
                         bgcolor="#F5F5F5",
                         border_radius=10,
                         height=200,
-                        alignment=ft.alignment.center,     # FIX: was ft.Alignment(0,0)
+                        alignment=ft.Alignment(0, 0),     # FIX: was ft.Alignment(0,0)
                         padding=20,
                     ),
                 ],
@@ -429,7 +429,7 @@ def main(page: ft.Page):
                         ),
                         bgcolor="#E3F2FD",
                         border_radius=8,
-                        padding=ft.padding.symmetric(horizontal=16, vertical=14),  # FIX: was ft.Padding()
+                        padding=ft.Padding(left=16, top=14, right=16, bottom=14),  # FIX: was ft.Padding()
                     ),
                 ],
                 spacing=12,
@@ -458,7 +458,7 @@ def main(page: ft.Page):
             content=ft.Text(name, size=13, weight=ft.FontWeight.W_500, color="#424242"),
             bgcolor="#EEEEEE",
             border_radius=20,
-            padding=ft.padding.symmetric(horizontal=16, vertical=8),  # FIX: was ft.Padding()
+            padding=ft.Padding(left=16, top=8, right=16, bottom=8),  # FIX: was ft.Padding()
             on_click=lambda e, idx=i: switch_tab(idx),
             ink=True,
         )
@@ -492,7 +492,7 @@ def main(page: ft.Page):
         bgcolor="#1E88E5",
         padding=20,
         border_radius=15,
-        alignment=ft.alignment.center,    # FIX: was ft.Alignment(0,0)
+        alignment=ft.Alignment(0, 0),    # FIX: was ft.Alignment(0,0)
         expand=True,
     )
 
