@@ -189,7 +189,7 @@ def main(page: ft.Page):
         def launch_player(e):
             page.launch_url(target_player_url)
 
-        # FIXED: "launch" is passed as a positional argument for maximum compatibility
+        # FIXED: Changed from ft.alignment.center to ft.Alignment(0, 0) for version compatibility
         video_view = ft.Container(
             content=ft.Column(
                 [
@@ -211,7 +211,7 @@ def main(page: ft.Page):
                 horizontal_alignment=ft.CrossAxisAlignment.CENTER,
                 spacing=15,
             ),
-            alignment=ft.alignment.center,
+            alignment=ft.Alignment(0, 0),
             expand=True,
             bgcolor="#F5F5F5",
             padding=20,
