@@ -335,7 +335,7 @@ def main(page: ft.Page):
                         padding=ft.Padding(left=20, top=12, right=20, bottom=12),  # FIX: cleaner padding
                     ),
                     ft.Container(height=10),
-                    ft.Text("Embedded Video on project contributio:", weight=ft.FontWeight.BOLD, size=14),
+                    ft.Text("Embedded Video on project contribution:", weight=ft.FontWeight.BOLD, size=14),
                     ft.Container(
                         content=ft.Column(
                             [
