@@ -175,22 +175,55 @@ def main(page: ft.Page):
             padding=0,
         )
     # --------------------------------------------------
-    # VIDEO PLAYER OVERLAY — Native Extension Implementation
+    # VIDEO PLAYER OVERLAY — Version 0.85.3 Flawless Layout
     # --------------------------------------------------
     def open_video_overlay(e=None):
         def close_video(e=None):
             page.overlay.clear()
             page.update()
 
-        # FIXED: Using the newly installed flet_video extension.
-        # It reads straight from your assets/ directory seamlessly.
-        video_player = fv.Video(
+        def launch_player_tab(e):
+            video_filename = "demo.mp4"
+            target_url = f"/video_player.html?v={video_filename}"
+            page.launch_url(target_url)
+
+        # Stable action button built using simple integers for version safety
+        custom_action_button = ft.Container(
+            content=ft.Text("Launch Player  ↗", color="white", weight=ft.FontWeight.BOLD),
+            bgcolor="#1E88E5",
+            padding=12,  # Direct integer value for uniform internal text padding
+            border_radius=8,
+            on_click=launch_player_tab,
+            alignment=ft.Alignment(0, 0),
+        )
+
+        video_placeholder = ft.Container(
+            content=ft.Column(
+                [
+                    ft.Icon("play_circle_fill", size=50, color="#1E88E5"),
+                    ft.Text(
+                        "Interactive Video Player Ready",
+                        size=16,
+                        weight=ft.FontWeight.BOLD,
+                        color="#1565C0"
+                    ),
+                    ft.Text(
+                        "Click below to watch the project demonstration in a dedicated full-size browser tab.",
+                        size=13,
+                        text_align=ft.TextAlign.CENTER,
+                        color="#555555"
+                    ),
+                    ft.Container(height=10),
+                    custom_action_button  
+                ],
+                alignment=ft.MainAxisAlignment.CENTER,
+                horizontal_alignment=ft.CrossAxisAlignment.CENTER,
+                spacing=10,
+            ),
+            bgcolor="#F5F5F5",
+            border_radius=8,
+            alignment=ft.Alignment(0, 0),
             expand=True,
-            playlist=["demo.mp4"], # Replace with your actual filename if needed
-            playlist_mode=fv.PlaylistMode.LOOP,
-            fill_color="black",
-            autoplay=True,
-            volume=1.0,
         )
 
         video_panel = ft.Container(
@@ -206,18 +239,18 @@ def main(page: ft.Page):
                     ),
                     ft.Divider(),
                     ft.Container(
-                        content=video_player,
-                        height=420,  # Neatly sizes the video element right inside your popup layout
+                        content=video_placeholder,
+                        height=420,  # Locks your clean gray box frame layout height metric perfectly
                         border_radius=8,
-                        clip_behavior="hardEdge",
                     ),
                 ],
-                spacing=8,
+                spacing=12,
                 tight=True,
+                horizontal_alignment=ft.CrossAxisAlignment.STRETCH, # Forces the gray player canvas to fill out wide
             ),
             bgcolor="white",
             border_radius=12,
-            padding=20,
+            padding=24, # FIXED: Using a single clean integer guarantees even margins on all 4 sides without errors!
             width=860,
             border=ft.Border(
                 left=ft.BorderSide(2, "#1E88E5"),
