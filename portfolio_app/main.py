@@ -129,45 +129,40 @@ def main(page: ft.Page):
         )
 
     # --------------------------------------------------
-    # LOG CARD (GitHub Evidence)
+    # LOG IMAGE CARD (GitHub Evidence) — shows screenshot inline
     # --------------------------------------------------
-    def log_card(title: str, url: str) -> ft.Container:
-        def on_view(e):
-            page.launch_url(url)
-
+    def log_image_card(title: str, image_path: str) -> ft.Container:
         return ft.Container(
             content=ft.Column(
                 [
                     ft.Text(
                         title,
                         weight=ft.FontWeight.BOLD,
-                        size=13,
-                        color="white",
-                        text_align=ft.TextAlign.CENTER,
+                        size=14,
+                        color="blue800",
+                        text_align=ft.TextAlign.LEFT,
                     ),
                     ft.Container(
-                        content=ft.Text(
-                            "View Logs",
-                            size=11,
-                            weight=ft.FontWeight.W_500,
-                            color="black",
+                        content=ft.Image(
+                            src=image_path,
+                            fit=ft.ImageFit.CONTAIN,
+                            border_radius=8,
                         ),
-                        bgcolor="white",
-                        border_radius=4,
-                        padding=ft.Padding(left=12, top=6, right=12, bottom=6),
-                        on_click=on_view,
-                        ink=True,
+                        border=ft.Border(
+                            top=ft.BorderSide(1, "grey300"),
+                            bottom=ft.BorderSide(1, "grey300"),
+                            left=ft.BorderSide(1, "grey300"),
+                            right=ft.BorderSide(1, "grey300"),
+                        ),
+                        border_radius=8,
+                        bgcolor="grey100",
+                        padding=8,
                     ),
                 ],
-                spacing=10,
-                alignment=ft.MainAxisAlignment.CENTER,
-                horizontal_alignment=ft.CrossAxisAlignment.CENTER,
+                spacing=8,
+                horizontal_alignment=ft.CrossAxisAlignment.START,
             ),
-            padding=15,
-            border_radius=10,
-            bgcolor="blue300",
-            width=220,
-            height=110,
+            padding=ft.Padding(left=0, top=0, right=0, bottom=0),
         )
 
     # ==================================================
@@ -412,14 +407,14 @@ def main(page: ft.Page):
                         "Verified log updates and source tracking metrics mapped directly back to the main branch repository Architecture:",
                         size=13,
                     ),
-                    log_card("Commit History Log", "YOUR_COMMIT_LOG_URL"),
+                    log_image_card("Commit History Log", "assets/commit_history.png"),
                     ft.Container(height=8),
                     ft.Text("2. Pull Request Logs", size=16, weight=ft.FontWeight.BOLD, color="blue700"),
                     ft.Text(
                         "Detailed features proposed, structured code reviews performed, and team merges completed successfully:",
                         size=13,
                     ),
-                    log_card("Pull Request Logs", "YOUR_PR_LOG_URL"),
+                    log_image_card("Pull Request Logs", "assets/pr_logs.png"),
                     ft.Container(height=8),
                     ft.Text("3. Impact Summary", size=16, weight=ft.FontWeight.BOLD, color="blue700"),
                     ft.Container(
@@ -530,4 +525,4 @@ def main(page: ft.Page):
     )
 
 
-ft.app(target=main, assets_dir="assets")
+ft.app(target=main, assets_dir="assets", view=ft.AppView.WEB_BROWSER)
