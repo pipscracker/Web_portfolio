@@ -175,21 +175,19 @@ def main(page: ft.Page):
         )
 
     # --------------------------------------------------
-    # VIDEO PLAYER OVERLAY — Fixes asset path & uses native ft.Video for cross-platform stability
+    # VIDEO PLAYER OVERLAY — uses ft.WebView to embed video_player.html
     # --------------------------------------------------
     def open_video_overlay(e=None):
         def close_video(e=None):
             page.overlay.clear()
             page.update()
 
-        # Replaced WebView with native Video control to work around WebSocket restrictions
-        video_view = ft.Video(
+        # FIX: Convert WebSocket address to an HTTP address so WebView can resolve the asset files correctly
+        http_base_url = page.url.replace("ws://", "http://").replace("wss://", "https://")
+
+        video_view = ft.WebView(
+            url=f"{http_base_url}/video_player.html",
             expand=True,
-            playlist=[ft.VideoMedia("demo.mp4")],
-            playlist_mode=ft.PlaylistMode.LOOP,
-            fill_color="#000000",
-            aspect_ratio=16/9,
-            autoplay=True,
         )
 
         video_panel = ft.Container(
@@ -235,7 +233,8 @@ def main(page: ft.Page):
             bgcolor="#88000000",
             expand=True,
             alignment=ft.Alignment(0, 0),
-            on_click=close_video)
+            on_click=close_video,
+        )
 
         page.overlay.clear()
         page.overlay.append(video_bg)
@@ -586,5 +585,4 @@ def main(page: ft.Page):
     )
 
 
-# Changed ft.app to non-deprecated ft.run
-ft.run(main, assets_dir="assets", view=ft.AppView.WEB_BROWSER)
+ft.app(main, assets_dir="assets", view=ft.AppView.WEB_BROWSER)
