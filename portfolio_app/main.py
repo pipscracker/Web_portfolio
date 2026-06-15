@@ -183,7 +183,7 @@ def main(page: ft.Page):
             page.update()
 
         def launch_player_tab(e):
-            video_filename = "\demo.mp4"
+            video_filename = "/demo.mp4"
             target_url = f"/video_player.html?v={video_filename}"
             page.launch_url(target_url)
 
