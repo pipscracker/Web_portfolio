@@ -14,12 +14,12 @@ def main(page: ft.Page):
         value="Document Viewer",
         size=16,
         weight=ft.FontWeight.BOLD,
-        color=ft.colors.BLUE_800,          # FIX: was "blue800" (invalid string)
+        color="#1565C0",          # FIX: was "blue800" (invalid string)
     )
     doc_viewer_desc = ft.Text(
         value="Select a certificate or report below to view it instantly.",
         size=13,
-        color=ft.colors.GREY_700,          # FIX: was "grey700"
+        color="#616161",          # FIX: was "grey700"
     )
     doc_viewer_image = ft.Image(
         src="",
@@ -27,7 +27,7 @@ def main(page: ft.Page):
         visible=False,
         expand=True,
     )
-    doc_viewer_placeholder = ft.Text("No document selected", color=ft.colors.GREY_500)  # FIX: color string
+    doc_viewer_placeholder = ft.Text("No document selected", color="#9E9E9E")  # FIX: color string
 
     doc_viewer_frame = ft.Container(
         content=ft.Column(
@@ -37,7 +37,7 @@ def main(page: ft.Page):
             expand=True,
         ),
         alignment=ft.alignment.center,     # FIX: was ft.Alignment(0, 0) — use ft.alignment.center
-        bgcolor=ft.colors.GREY_200,        # FIX: was "grey200"
+        bgcolor="#EEEEEE",        # FIX: was "grey200"
         border_radius=10,
         height=500,
         expand=True,
@@ -118,7 +118,7 @@ def main(page: ft.Page):
             ),
             padding=10,
             border_radius=10,
-            bgcolor=ft.colors.BLUE_400,    # FIX: was "blue400"
+            bgcolor="#42A5F5",    # FIX: was "blue400"
             width=210,
             height=115,
         )
@@ -134,7 +134,7 @@ def main(page: ft.Page):
                         title,
                         weight=ft.FontWeight.BOLD,
                         size=14,
-                        color=ft.colors.BLUE_800,          # FIX: was "blue800"
+                        color="#1565C0",          # FIX: was "blue800"
                         text_align=ft.TextAlign.LEFT,
                     ),
                     ft.Container(
@@ -145,9 +145,9 @@ def main(page: ft.Page):
                             height=300,                     # FIX: CRITICAL — missing height caused crash
                             width=float("inf"),             # let it stretch horizontally
                         ),
-                        border=ft.border.all(1, ft.colors.GREY_300),  # FIX: was manual Border() construction
+                        border=ft.border.all(1, "#E0E0E0"),  # FIX: was manual Border() construction
                         border_radius=8,
-                        bgcolor=ft.colors.GREY_100,        # FIX: was "grey100"
+                        bgcolor="#F5F5F5",        # FIX: was "grey100"
                         padding=8,
                         clip_behavior=ft.ClipBehavior.HARD_EDGE,
                     ),
@@ -166,7 +166,7 @@ def main(page: ft.Page):
             return ft.Column(
                 [
                     ft.Text(label, weight=ft.FontWeight.BOLD, size=14),
-                    ft.Text(f"- {desc}", size=13, color=ft.colors.GREY_800),
+                    ft.Text(f"- {desc}", size=13, color="#424242"),
                     ft.Container(height=4),
                 ],
                 spacing=2,
@@ -243,7 +243,7 @@ def main(page: ft.Page):
                 spacing=10,
             ),
             padding=15,
-            border=ft.border.all(1, ft.colors.GREY_300),   # FIX: was manual Border() construction
+            border=ft.border.all(1, "#E0E0E0"),   # FIX: was manual Border() construction
             border_radius=10,
         )
 
@@ -252,14 +252,14 @@ def main(page: ft.Page):
                 [
                     ft.Text("MATLAB Achievement Hub", size=22, weight=ft.FontWeight.BOLD),
                     ft.Divider(),
-                    ft.Text("Completed Courses :", size=14, color=ft.colors.GREY_700),
+                    ft.Text("Completed Courses :", size=14, color="#616161"),
                     courses_grid,
                     ft.Container(height=10),
                     ft.Text("Document Showcase", size=16, weight=ft.FontWeight.BOLD),
                     ft.Text(
                         "Click on any course certificate or report button above to preview the document below.",
                         size=13,
-                        color=ft.colors.GREY_600,
+                        color="#757575",
                     ),
                     viewer_panel,
                 ],
@@ -282,7 +282,7 @@ def main(page: ft.Page):
                         "Confidence in Concepts",
                         size=18,
                         weight=ft.FontWeight.BOLD,
-                        color=ft.colors.BLUE_700,          # FIX: was "blue700"
+                        color="#1976D2",          # FIX: was "blue700"
                     ),
                     ft.Divider(),
                     ft.Text(
@@ -315,18 +315,18 @@ def main(page: ft.Page):
                                     "Total_Cost = Σ (Qᵢ × Pᵢ) + Overheads",
                                     size=16,
                                     weight=ft.FontWeight.BOLD,
-                                    color=ft.colors.BLUE_700,  # FIX: was "blue700"
+                                    color="#1976D2",  # FIX: was "blue700"
                                 ),
                                 ft.Text(
                                     "Where: Qᵢ = Quantity of material i,  Pᵢ = Unit Price of material i",
                                     size=12,
-                                    color=ft.colors.GREY_600,  # FIX: was "grey600"
+                                    color="#757575",  # FIX: was "grey600"
                                     italic=True,
                                 ),
                             ],
                             spacing=4,
                         ),
-                        bgcolor=ft.colors.BLUE_50,         # FIX: was "blue50"
+                        bgcolor="#E3F2FD",         # FIX: was "blue50"
                         border_radius=8,
                         padding=ft.padding.symmetric(horizontal=20, vertical=12),  # FIX: cleaner padding
                     ),
@@ -335,11 +335,11 @@ def main(page: ft.Page):
                     ft.Container(
                         content=ft.Column(
                             [
-                                ft.Icon(ft.Icons.PLAY_CIRCLE_OUTLINE, size=60, color=ft.colors.BLUE_300),
+                                ft.Icon(ft.Icons.PLAY_CIRCLE_OUTLINE, size=60, color="#90CAF9"),
                                 ft.Text(
                                     "Replace the URL below with your YouTube embed link.",
                                     size=12,
-                                    color=ft.colors.GREY_600,
+                                    color="#757575",
                                     text_align=ft.TextAlign.CENTER,
                                 ),
                                 ft.Container(
@@ -349,7 +349,7 @@ def main(page: ft.Page):
                                         weight=ft.FontWeight.W_600,
                                         color="white",
                                     ),
-                                    bgcolor=ft.colors.BLUE_600,
+                                    bgcolor="#1E88E5",
                                     border_radius=8,
                                     padding=ft.padding.symmetric(horizontal=20, vertical=10),
                                     on_click=lambda e: page.launch_url(
@@ -362,7 +362,7 @@ def main(page: ft.Page):
                             horizontal_alignment=ft.CrossAxisAlignment.CENTER,
                             spacing=12,
                         ),
-                        bgcolor=ft.colors.GREY_100,
+                        bgcolor="#F5F5F5",
                         border_radius=10,
                         height=200,
                         alignment=ft.alignment.center,     # FIX: was ft.Alignment(0,0)
@@ -391,24 +391,24 @@ def main(page: ft.Page):
                         "Large-Scale Team Collaboration Verification (20 Members Group)",
                         size=13,
                         italic=True,
-                        color=ft.colors.GREY_700,
+                        color="#616161",
                     ),
                     ft.Container(height=8),
-                    ft.Text("1. Commit History", size=16, weight=ft.FontWeight.BOLD, color=ft.colors.BLUE_700),
+                    ft.Text("1. Commit History", size=16, weight=ft.FontWeight.BOLD, color="#1976D2"),
                     ft.Text(
                         "Verified log updates and source tracking metrics mapped directly back to the main branch repository Architecture:",
                         size=13,
                     ),
                     log_image_card("Commit History Log", "assets/commit_history.png"),
                     ft.Container(height=8),
-                    ft.Text("2. Pull Request Logs", size=16, weight=ft.FontWeight.BOLD, color=ft.colors.BLUE_700),
+                    ft.Text("2. Pull Request Logs", size=16, weight=ft.FontWeight.BOLD, color="#1976D2"),
                     ft.Text(
                         "Detailed features proposed, structured code reviews performed, and team merges completed successfully:",
                         size=13,
                     ),
                     log_image_card("Pull Request Logs", "assets/pr_logs.png"),
                     ft.Container(height=8),
-                    ft.Text("3. Impact Summary", size=16, weight=ft.FontWeight.BOLD, color=ft.colors.BLUE_700),
+                    ft.Text("3. Impact Summary", size=16, weight=ft.FontWeight.BOLD, color="#1976D2"),
                     ft.Container(
                         content=ft.Column(
                             [
@@ -427,7 +427,7 @@ def main(page: ft.Page):
                                 ),
                             ]
                         ),
-                        bgcolor=ft.colors.BLUE_50,
+                        bgcolor="#E3F2FD",
                         border_radius=8,
                         padding=ft.padding.symmetric(horizontal=16, vertical=14),  # FIX: was ft.Padding()
                     ),
@@ -448,15 +448,15 @@ def main(page: ft.Page):
 
     def switch_tab(index: int):
         for i, btn in enumerate(tab_buttons):
-            btn.bgcolor = ft.colors.BLUE_600 if i == index else ft.colors.GREY_200
-            btn.content.color = "white" if i == index else ft.colors.GREY_800
+            btn.bgcolor = "#1E88E5" if i == index else "#EEEEEE"
+            btn.content.color = "white" if i == index else "#424242"
         content_area.content = tab_builders[index]()
         page.update()
 
     for i, name in enumerate(tab_names):
         btn = ft.Container(
-            content=ft.Text(name, size=13, weight=ft.FontWeight.W_500, color=ft.colors.GREY_800),
-            bgcolor=ft.colors.GREY_200,
+            content=ft.Text(name, size=13, weight=ft.FontWeight.W_500, color="#424242"),
+            bgcolor="#EEEEEE",
             border_radius=20,
             padding=ft.padding.symmetric(horizontal=16, vertical=8),  # FIX: was ft.Padding()
             on_click=lambda e, idx=i: switch_tab(idx),
@@ -489,7 +489,7 @@ def main(page: ft.Page):
             alignment=ft.MainAxisAlignment.CENTER,
             horizontal_alignment=ft.CrossAxisAlignment.CENTER,
         ),
-        bgcolor=ft.colors.BLUE_600,
+        bgcolor="#1E88E5",
         padding=20,
         border_radius=15,
         alignment=ft.alignment.center,    # FIX: was ft.Alignment(0,0)
@@ -503,9 +503,9 @@ def main(page: ft.Page):
             content=ft.Column(
                 [
                     header_panel,
-                    ft.Divider(height=1, color=ft.colors.GREY_300),
+                    ft.Divider(height=1, color="#E0E0E0"),
                     tab_bar,
-                    ft.Divider(height=1, color=ft.colors.GREY_300),
+                    ft.Divider(height=1, color="#E0E0E0"),
                     content_area,
                 ],
                 spacing=12,
