@@ -175,19 +175,46 @@ def main(page: ft.Page):
         )
 
     # --------------------------------------------------
-    # VIDEO PLAYER OVERLAY — uses ft.WebView to embed video_player.html
+    # VIDEO PLAYER OVERLAY — Patched workaround for missing WebView support
     # --------------------------------------------------
     def open_video_overlay(e=None):
         def close_video(e=None):
             page.overlay.clear()
             page.update()
 
-        # FIX: Convert WebSocket address to an HTTP address so WebView can resolve the asset files correctly
+        # Safely obtain the HTTP reference location
         http_base_url = page.url.replace("ws://", "http://").replace("wss://", "https://")
+        target_player_url = f"{http_base_url}/video_player.html"
 
-        video_view = ft.WebView(
-            url=f"{http_base_url}/video_player.html",
+        def launch_player(e):
+            page.launch_url(target_player_url)
+
+        # FIX: Replaced ft.WebView with a container redirection card compatible with older Flet versions
+        video_view = ft.Container(
+            content=ft.Column(
+                [
+                    ft.Icon(ft.icons.OPEN_IN_NEW, size=48, color="#1E88E5"),
+                    ft.Text(
+                        "Your current application host environment requires the video player to load in an independent tab.",
+                        size=13,
+                        text_align=ft.TextAlign.CENTER,
+                        color="#424242",
+                    ),
+                    ft.ElevatedButton(
+                        "Launch Player Tab",
+                        on_click=launch_player,
+                        bgcolor="#1E88E5",
+                        color="white",
+                    ),
+                ],
+                alignment=ft.MainAxisAlignment.CENTER,
+                horizontal_alignment=ft.CrossAxisAlignment.CENTER,
+                spacing=15,
+            ),
+            alignment=ft.alignment.center,
             expand=True,
+            bgcolor="#F5F5F5",
+            padding=20,
         )
 
         video_panel = ft.Container(
