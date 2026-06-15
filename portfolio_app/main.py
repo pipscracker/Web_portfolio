@@ -361,7 +361,12 @@ def main(page: ft.Page):
                                     bgcolor="#1E88E5",
                                     border_radius=10,
                                     padding=ft.Padding(left=24, top=12, right=24, bottom=12),
-                                    on_click=lambda e: page.launch_url("video_player.html"),
+                                    on_click=lambda e: page.launch_url(
+                                        "video_player.html",
+                                        web_popup_window=True,
+                                        web_popup_window_width=900,
+                                        web_popup_window_height=520,
+                                    ),
                                     ink=True,
                                 ),
                             ],
