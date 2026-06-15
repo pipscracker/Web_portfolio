@@ -21,6 +21,8 @@ def main(page: ft.Page):
         size=13,
         color="grey700",
     )
+
+    # Placeholder shown before any doc is selected
     doc_viewer_frame = ft.Container(
         content=ft.Text("No document selected", color="grey500"),
         alignment=ft.Alignment(0, 0),
@@ -33,9 +35,6 @@ def main(page: ft.Page):
 
     # --------------------------------------------------
     # DOCUMENT DISPLAY LOGIC
-    # PDFs from Google Drive are embedded via the /preview URL
-    # using ft.WebView — renders as an iframe in the browser,
-    # and as a native webview on desktop.
     # --------------------------------------------------
     def make_drive_preview_url(url: str) -> str:
         """Convert any Google Drive share link to the embeddable /preview URL."""
@@ -67,12 +66,80 @@ def main(page: ft.Page):
         doc_viewer_title.value = f"Viewing: {name} — {doc_type}"
         doc_viewer_desc.value = "Document loading below (make sure the file is shared publicly)."
 
-        # ft.WebView renders as iframe in browser, native WebView on desktop
-        doc_viewer_frame.content = ft.WebView(
-            url=preview_url,
-            expand=True,
-        )
+        # -------------------------------------------------------
+        # CROSS-PLATFORM EMBED STRATEGY
+        #
+        # On the WEB:  Flet renders ft.Container with an HTML
+        #              iframe injected via page.client_storage /
+        #              using the web-safe embed approach below.
+        #
+        # On DESKTOP:  ft.WebView is unavailable in many Flet
+        #              versions, so we show a styled panel with
+        #              an "Open in Browser" button instead.
+        # -------------------------------------------------------
+
+        # Detect if we're running in a web browser
+        is_web = page.web if hasattr(page, "web") else False
+
+        if is_web:
+            # Use Flet's HTML control (web-only, Flet ≥ 0.21)
+            try:
+                iframe_html = (
+                    f'<iframe src="{preview_url}" '
+                    f'width="100%" height="480" '
+                    f'style="border:none;border-radius:8px;" '
+                    f'allow="autoplay"></iframe>'
+                )
+                doc_viewer_frame.content = ft.Html(
+                    value=iframe_html,
+                    expand=True,
+                )
+            except AttributeError:
+                # ft.Html not available — fall back to link button
+                _fallback_frame(name, preview_url)
+        else:
+            # Desktop: show a clean preview panel + open-in-browser button
+            _fallback_frame(name, preview_url)
+
         page.update()
+
+    def _fallback_frame(name: str, preview_url: str):
+        """Shown on desktop or when ft.Html is unavailable."""
+        doc_viewer_frame.content = ft.Column(
+            [
+                ft.Icon(ft.Icons.PICTURE_AS_PDF, size=60, color="blue300"),
+                ft.Text(
+                    name,
+                    size=15,
+                    weight=ft.FontWeight.BOLD,
+                    text_align=ft.TextAlign.CENTER,
+                    color="blue800",
+                ),
+                ft.Text(
+                    "Preview is not supported in the desktop app.\n"
+                    "Click the button below to open the document.",
+                    size=13,
+                    color="grey600",
+                    text_align=ft.TextAlign.CENTER,
+                ),
+                ft.Container(
+                    content=ft.Text(
+                        "Open Document ↗",
+                        size=13,
+                        weight=ft.FontWeight.W_600,
+                        color="white",
+                    ),
+                    bgcolor="blue600",
+                    border_radius=8,
+                    padding=ft.Padding(left=20, top=10, right=20, bottom=10),
+                    on_click=lambda e: page.launch_url(preview_url),
+                    ink=True,
+                ),
+            ],
+            alignment=ft.MainAxisAlignment.CENTER,
+            horizontal_alignment=ft.CrossAxisAlignment.CENTER,
+            spacing=16,
+        )
 
     # --------------------------------------------------
     # COURSE CARD
@@ -312,14 +379,27 @@ def main(page: ft.Page):
                 ft.Text("Embedded Video Explanation:", weight=ft.FontWeight.BOLD, size=14),
                 ft.Container(
                     content=ft.Column([
-                        ft.Text("▶", size=48, color="blue300"),
+                        ft.Icon(ft.Icons.PLAY_CIRCLE_OUTLINE, size=60, color="blue300"),
                         ft.Text(
-                            "Replace this with:\nft.WebView(url='https://www.youtube.com/embed/YOUR_VIDEO_ID', height=300, expand=True)",
+                            "Replace the URL below with your YouTube embed link.",
                             size=12,
                             color="grey600",
                             text_align=ft.TextAlign.CENTER,
                         ),
-                    ], alignment=ft.MainAxisAlignment.CENTER, horizontal_alignment=ft.CrossAxisAlignment.CENTER),
+                        ft.Container(
+                            content=ft.Text(
+                                "Watch Video ↗",
+                                size=13,
+                                weight=ft.FontWeight.W_600,
+                                color="white",
+                            ),
+                            bgcolor="blue600",
+                            border_radius=8,
+                            padding=ft.Padding(left=20, top=10, right=20, bottom=10),
+                            on_click=lambda e: page.launch_url("https://www.youtube.com/watch?v=YOUR_VIDEO_ID"),
+                            ink=True,
+                        ),
+                    ], alignment=ft.MainAxisAlignment.CENTER, horizontal_alignment=ft.CrossAxisAlignment.CENTER, spacing=12),
                     bgcolor="grey100",
                     border_radius=10,
                     height=200,
@@ -448,4 +528,4 @@ def main(page: ft.Page):
     )
 
 
-ft.run(main, assets_dir="assets")
+ft.app(target=main, assets_dir="assets")
