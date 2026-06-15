@@ -174,6 +174,73 @@ def main(page: ft.Page):
             padding=0,
         )
 
+    # --------------------------------------------------
+    # VIDEO PLAYER OVERLAY — Fixes asset path & uses native ft.Video for cross-platform stability
+    # --------------------------------------------------
+    def open_video_overlay(e=None):
+        def close_video(e=None):
+            page.overlay.clear()
+            page.update()
+
+        # Replaced WebView with native Video control to work around WebSocket restrictions
+        video_view = ft.Video(
+            expand=True,
+            playlist=[ft.VideoMedia("demo.mp4")],
+            playlist_mode=ft.PlaylistMode.LOOP,
+            fill_color="#000000",
+            aspect_ratio=16/9,
+            autoplay=True,
+        )
+
+        video_panel = ft.Container(
+            content=ft.Column(
+                [
+                    ft.Row(
+                        [
+                            ft.Text("Project Video", size=15, weight=ft.FontWeight.BOLD, color="#1565C0"),
+                            ft.Container(expand=True),
+                            ft.TextButton("✕  Close", on_click=close_video),
+                        ],
+                        alignment=ft.MainAxisAlignment.SPACE_BETWEEN,
+                    ),
+                    ft.Divider(),
+                    ft.Container(
+                        content=video_view,
+                        height=420,
+                        border_radius=8,
+                        clip_behavior="hardEdge",
+                    ),
+                ],
+                spacing=8,
+                tight=True,
+            ),
+            bgcolor="white",
+            border_radius=12,
+            padding=20,
+            width=860,
+            border=ft.Border(
+                left=ft.BorderSide(2, "#1E88E5"),
+                right=ft.BorderSide(2, "#1E88E5"),
+                top=ft.BorderSide(2, "#1E88E5"),
+                bottom=ft.BorderSide(2, "#1E88E5"),
+            ),
+        )
+
+        video_bg = ft.Container(
+            content=ft.Column(
+                [video_panel],
+                alignment=ft.MainAxisAlignment.CENTER,
+                horizontal_alignment=ft.CrossAxisAlignment.CENTER,
+            ),
+            bgcolor="#88000000",
+            expand=True,
+            alignment=ft.Alignment(0, 0),
+            on_click=close_video)
+
+        page.overlay.clear()
+        page.overlay.append(video_bg)
+        page.update()
+
     # ==================================================
     # TAB 1: PROJECT TIMELINE
     # ==================================================
@@ -356,9 +423,7 @@ def main(page: ft.Page):
                                     bgcolor="#1E88E5",
                                     border_radius=10,
                                     padding=ft.Padding(left=24, top=12, right=24, bottom=12),
-                                    on_click=lambda e: page.launch_url(
-                                        "http://127.0.0.1:8550/video_player.html"  # ← no popup, same tab
-                                    ),
+                                    on_click=open_video_overlay,
                                     ink=True,
                                 ),
                             ],
@@ -521,4 +586,5 @@ def main(page: ft.Page):
     )
 
 
-ft.app(target=main, assets_dir="assets", view=ft.AppView.WEB_BROWSER)
+# Changed ft.app to non-deprecated ft.run
+ft.run(main, assets_dir="assets", view=ft.AppView.WEB_BROWSER)
