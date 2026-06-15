@@ -8,35 +8,67 @@ def main(page: ft.Page):
     page.theme_mode = ft.ThemeMode.LIGHT
 
     # --------------------------------------------------
-    # DISPLAY LOGIC — opens a dialog overlay to show doc
+    # DOCUMENT VIEWER — full screen overlay via page.overlay
     # --------------------------------------------------
-    def display_doc(name: str, doc_type: str, image_path: str):
-        def close_dlg(e):
-            dlg.open = False
-            page.update()
+    overlay_title = ft.Text("", size=15, weight=ft.FontWeight.BOLD, color="#1565C0")
+    overlay_image = ft.Image(src="", fit="contain", width=700, height=500)
 
-        dlg = ft.AlertDialog(
-            modal=True,
-            title=ft.Text(f"{name} — {doc_type}", size=15, weight=ft.FontWeight.BOLD, color="#1565C0"),
-            content=ft.Container(
-                content=ft.Image(
-                    src=image_path,
-                    fit="contain",
-                    expand=True,
+    def close_viewer(e=None):
+        page.overlay.clear()
+        page.update()
+
+    overlay_panel = ft.Container(
+        content=ft.Column(
+            [
+                ft.Row(
+                    [
+                        overlay_title,
+                        ft.Container(expand=True),
+                        ft.TextButton("✕  Close", on_click=close_viewer),
+                    ],
+                    alignment=ft.MainAxisAlignment.SPACE_BETWEEN,
                 ),
-                width=700,
-                height=500,
-                bgcolor="#EEEEEE",
-                border_radius=8,
-                padding=10,
-            ),
-            actions=[
-                ft.TextButton("Close", on_click=close_dlg),
+                ft.Divider(),
+                ft.Container(
+                    content=overlay_image,
+                    bgcolor="#EEEEEE",
+                    border_radius=8,
+                    padding=10,
+                    alignment=ft.Alignment(0, 0),
+                ),
             ],
-            actions_alignment=ft.MainAxisAlignment.END,
-        )
-        page.dialog = dlg
-        dlg.open = True
+            spacing=8,
+            tight=True,
+        ),
+        bgcolor="white",
+        border_radius=12,
+        padding=20,
+        width=740,
+        border=ft.Border(
+            left=ft.BorderSide(2, "#1E88E5"),
+            right=ft.BorderSide(2, "#1E88E5"),
+            top=ft.BorderSide(2, "#1E88E5"),
+            bottom=ft.BorderSide(2, "#1E88E5"),
+        ),
+    )
+
+    overlay_bg = ft.Container(
+        content=ft.Column(
+            [overlay_panel],
+            alignment=ft.MainAxisAlignment.CENTER,
+            horizontal_alignment=ft.CrossAxisAlignment.CENTER,
+        ),
+        bgcolor="#88000000",
+        expand=True,
+        alignment=ft.Alignment(0, 0),
+        on_click=close_viewer,
+    )
+
+    def display_doc(name: str, doc_type: str, image_path: str):
+        overlay_title.value = f"{name} — {doc_type}"
+        overlay_image.src = image_path
+        page.overlay.clear()
+        page.overlay.append(overlay_bg)
         page.update()
 
     # --------------------------------------------------
@@ -233,6 +265,7 @@ def main(page: ft.Page):
                         color="#757575",
                     ),
                     courses_grid,
+
                 ],
                 spacing=15,
                 horizontal_alignment=ft.CrossAxisAlignment.START,
