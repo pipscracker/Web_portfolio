@@ -113,9 +113,9 @@ def main(page: ft.Page):
                             ft.Container(
                                 content=ft.Text(
                                     "Report",
-                                    size=11,
-                                    weight=ft.FontWeight.W_500,
-                                    color="black",
+                                size=11,
+                                weight=ft.FontWeight.W_500,
+                                color="black",
                                 ),
                                 bgcolor="white",
                                 border_radius=4,
@@ -173,52 +173,144 @@ def main(page: ft.Page):
             ),
             padding=0,
         )
-
+    
     # --------------------------------------------------
-    # VIDEO PLAYER OVERLAY — Web-Safe Player Trigger
+    # VIDEO PLAYER OVERLAY — Web-Safe Redirect Interface
     # --------------------------------------------------
     def open_video_overlay(e=None):
         def close_video(e=None):
             page.overlay.clear()
             page.update()
 
-        # Convert web-socket protocol paths to formal HTTP/HTTPS links
-        base_url = page.url.replace("ws://", "http://").replace("wss://", "https://")
-        if not base_url.endswith("/"):
-            base_url += "/"
-        
-        # When assets are mounted, Flet serves them cleanly at the root level directory
-        target_player_url = f"{base_url}video_player.html"
+        # FIXED: Declare the action function using modern async await syntax
+        async def launch_player(e):
+            video_filename = "demo.mp4" # Replace with your actual filename if needed
+            target_player_url = f"/video_player.html?v={video_filename}"
+            # FIXED: Avoids runtime warnings by calling the updated URL launcher correctly
+            await page.open_url_async(target_player_url)
 
-        def launch_player(e):
-            page.launch_url(target_player_url)
-
-        # Replaced the unsupported WebView widget with a stylized, responsive card interface
         video_view = ft.Container(
             content=ft.Column(
                 [
-                    ft.Icon(ft.icons.PLAY_CIRCLE_OUTLINE, size=56, color="#1E88E5"),
+                    ft.Icon("play_circle_filled", size=64, color="#1E88E5"),
                     ft.Text(
-                        "Click below to open the custom HTML5 video player page.",
-                        size=14,
+                        "Project Video Demonstration",
+                        size=16,
+                        weight=ft.FontWeight.BOLD,
+                        color="#1565C0",
+                    ),
+                    ft.Text(
+                        "Click the button below to launch the dedicated interactive HTML5 video player tab.",
+                        size=13,
                         text_align=ft.TextAlign.CENTER,
                         color="#424242",
-                        weight=ft.FontWeight.W_500,
+                    ),
+                    ft.Container(height=8),
+                    ft.ElevatedButton(
+                        "Launch Video Player  ↗",
+                        on_click=launch_player,  # FIXED: Now correctly references the function above
+                        bgcolor="#1E88E5",
+                        color="white",
+                        style=ft.ButtonStyle(
+                            padding=ft.Padding.all(14),
+                        )
+                    ),
+                ],
+                alignment=ft.MainAxisAlignment.CENTER,
+                horizontal_alignment=ft.CrossAxisAlignment.CENTER,
+                spacing=10,
+            ),
+            bgcolor="#F5F5F5",
+            border_radius=8,
+            padding=24,
+            expand=True,
+            alignment=ft.Alignment(0, 0),
+        )
+
+        video_panel = ft.Container(
+            content=ft.Column(
+                [
+                    ft.Row(
+                        [
+                            ft.Text("Project Video", size=15, weight=ft.FontWeight.BOLD, color="#1565C0"),
+                            ft.Container(expand=True),
+                            ft.TextButton("✕  Close", on_click=close_video),
+                        ],
+                        alignment=ft.MainAxisAlignment.SPACE_BETWEEN,
+                    ),
+                    ft.Divider(),
+                    ft.Container(
+                        content=video_view,
+                        height=420,
+                        border_radius=8,
+                        clip_behavior="hardEdge",
+                    ),
+                ],
+                spacing=8,
+                tight=True,
+            ),
+            bgcolor="white",
+            border_radius=12,
+            padding=20,
+            width=860,
+            border=ft.Border(
+                left=ft.BorderSide(2, "#1E88E5"),
+                right=ft.BorderSide(2, "#1E88E5"),
+                top=ft.BorderSide(2, "#1E88E5"),
+                bottom=ft.BorderSide(2, "#1E88E5"),
+            ),
+        )
+
+        video_bg = ft.Container(
+            content=ft.Column(
+                [video_panel],
+                alignment=ft.MainAxisAlignment.CENTER,
+                horizontal_alignment=ft.CrossAxisAlignment.CENTER,
+            ),
+            bgcolor="#88000000",
+            expand=True,
+            alignment=ft.Alignment(0, 0),
+            on_click=close_video,
+        )
+
+        page.overlay.clear()
+        page.overlay.append(video_bg)
+        page.update()
+
+        # FIXED: Designed a highly professional native UI card to substitute the breaking WebView control
+        video_view = ft.Container(
+            content=ft.Column(
+                [
+                    ft.Icon("play_circle_filled", size=64, color="#1E88E5"),
+                    ft.Text(
+                        "Project Video Demonstration",
+                        size=16,
+                        weight=ft.FontWeight.BOLD,
+                        color="#1565C0",
+                    ),
+                    ft.Text(
+                        "Click the button below to launch the dedicated interactive HTML5 video player tab.",
+                        size=13,
+                        text_align=ft.TextAlign.CENTER,
+                        color="#424242",
                     ),
                     ft.ElevatedButton(
                         "Launch Video Player  ↗",
                         on_click=launch_player,
                         bgcolor="#1E88E5",
                         color="white",
+                        style=ft.ButtonStyle(
+                            padding=ft.Padding.all(14),  # <-- Changed to capital P
+                        ),
                     ),
                 ],
                 alignment=ft.MainAxisAlignment.CENTER,
                 horizontal_alignment=ft.CrossAxisAlignment.CENTER,
-                spacing=12,
+                spacing=10,
             ),
             bgcolor="#F5F5F5",
             border_radius=8,
-            padding=20,
+            padding=24,
             expand=True,
             alignment=ft.Alignment(0, 0),
         )
@@ -618,4 +710,4 @@ def main(page: ft.Page):
     )
 
 
-ft.app(main, assets_dir="assets", view=ft.AppView.WEB_BROWSER)
+ft.run(main, assets_dir="assets", view=ft.AppView.WEB_BROWSER)
