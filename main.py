@@ -284,14 +284,15 @@ def main(page: ft.Page):
         VIDEO_WIDTH = 560
         VIDEO_HEIGHT = 315  # 16:9
 
-        def _video_src():
-            try:
-                # page.url looks like "http://127.0.0.1:PORT" — demo.mp4 lives
-                # in the same assets folder that is already served from there.
-                base = page.url.rstrip("/")
-                return f"{base}/demo.mp4"
-            except Exception:
-                return "demo.mp4"
+        # NOTE: pass the BARE relative filename (same convention as
+        # ft.Image(src="commit_history.png") elsewhere in this file).
+        # Flet resolves this against assets_dir itself. Building an absolute
+        # "http://host:port/demo.mp4" URL manually was the bug — once a
+        # string has a scheme like "http://", Flet treats it as a literal
+        # external URL and skips the assets_dir lookup entirely, so it was
+        # requesting the wrong path and silently failing to load (hence the
+        # stuck 00:00 / 00:00 black player).
+        VIDEO_ASSET = "demo.mp4"
 
         # The box that will hold either the thumbnail OR the real video player
         video_box = ft.Container(width=VIDEO_WIDTH, height=VIDEO_HEIGHT, border_radius=10)
@@ -335,7 +336,7 @@ def main(page: ft.Page):
             # Swap the thumbnail out for a real, inline video player and
             # start it immediately — nothing leaves the current page.
             video_box.content = ftv.Video(
-                playlist=[ftv.VideoMedia(_video_src())],
+                playlist=[ftv.VideoMedia(VIDEO_ASSET)],
                 autoplay=True,
                 show_controls=True,
                 fit=ft.BoxFit.CONTAIN,
