@@ -521,7 +521,7 @@ def main(page: ft.Page):
                     [
                         ft.Text("My Portfolio", size=28, weight=ft.FontWeight.BOLD, color="white"),
                         ft.CircleAvatar(
-                            background_image_url="profile pic.jpeg",
+                            background_image_src="profile pic.jpeg",
                             radius=22,
                         ),
                     ],
