@@ -1,5 +1,5 @@
 import flet as ft
-import flet_video as ftv
+import flet_video as ftv  # inline video player — requires: pip install flet-video
 
 
 def main(page: ft.Page):
@@ -9,7 +9,7 @@ def main(page: ft.Page):
     page.theme_mode = ft.ThemeMode.LIGHT
 
     # --------------------------------------------------
-    # DOCUMENT VIEWER 
+    # DOCUMENT VIEWER — full screen overlay via page.overlay
     # --------------------------------------------------
     overlay_title = ft.Text("", size=15, weight=ft.FontWeight.BOLD, color="#1565C0")
     overlay_image = ft.Image(src="", fit="contain", width=700, height=500)
@@ -114,9 +114,9 @@ def main(page: ft.Page):
                             ft.Container(
                                 content=ft.Text(
                                     "Report",
-                                size=11,
-                                weight=ft.FontWeight.W_500,
-                                color="black",
+                                    size=11,
+                                    weight=ft.FontWeight.W_500,
+                                    color="black",
                                 ),
                                 bgcolor="white",
                                 border_radius=4,
@@ -162,7 +162,12 @@ def main(page: ft.Page):
                             height=300,
                             expand=True,
                         ),
-                        border=ft.Border(left=ft.BorderSide(1,"#E0E0E0"),right=ft.BorderSide(1,"#E0E0E0"),top=ft.BorderSide(1,"#E0E0E0"),bottom=ft.BorderSide(1,"#E0E0E0")),
+                        border=ft.Border(
+                            left=ft.BorderSide(1, "#E0E0E0"),
+                            right=ft.BorderSide(1, "#E0E0E0"),
+                            top=ft.BorderSide(1, "#E0E0E0"),
+                            bottom=ft.BorderSide(1, "#E0E0E0"),
+                        ),
                         border_radius=8,
                         bgcolor="#F5F5F5",
                         padding=8,
@@ -266,7 +271,6 @@ def main(page: ft.Page):
                         color="#757575",
                     ),
                     courses_grid,
-
                 ],
                 spacing=15,
                 horizontal_alignment=ft.CrossAxisAlignment.START,
@@ -275,13 +279,13 @@ def main(page: ft.Page):
         )
 
     # ==================================================
-    # TAB 3: TECHNICAL BLOG  
+    # TAB 3: TECHNICAL BLOG  (with BlastX Equations)
     # ==================================================
     def build_blog_tab():
         VIDEO_WIDTH = 560
-        VIDEO_HEIGHT = 315  # 16:9
-        VIDEO_ASSET = "demo.mp4"
+        VIDEO_HEIGHT = 315
 
+        VIDEO_ASSET = "demo.mp4"
         video_box = ft.Container(width=VIDEO_WIDTH, height=VIDEO_HEIGHT, border_radius=10)
 
         def thumbnail_content():
@@ -320,7 +324,6 @@ def main(page: ft.Page):
             )
 
         def play_video(e):
-            # start it immediately 
             video_box.content = ftv.Video(
                 playlist=[ftv.VideoMedia(VIDEO_ASSET)],
                 autoplay=True,
@@ -339,8 +342,6 @@ def main(page: ft.Page):
         video_box.ink = True
         video_box.on_click = play_video
         video_box.tooltip = "Click to watch video"
-
-        video_thumbnail = video_box  
 
         open_btn = ft.Container(
             content=ft.Text(
@@ -373,17 +374,37 @@ def main(page: ft.Page):
                         size=13,
                     ),
                     ft.Divider(),
-                    ft.Text("Topic 2: BlastX Optimization & Fragmentation Metrics", weight=ft.FontWeight.BOLD, size=14),
+                    ft.Text("Topic 2: BlastX Optimization & Blasting Formulae", weight=ft.FontWeight.BOLD, size=14),
                     ft.Text(
-                        "To guarantee safety bounds and avoid structural over-breakage in civil tunnels or open pits, "
-                        "the design module computes the exact Powder Factor (PF):",
+                        "When managing explosive energetic boundaries and raw physical properties across mining, structural civil, "
+                        "and metallurgical rock engineering sub-modules within the BlastX analytical engine, system metrics must "
+                        "strictly correspond to formal technical and economic parameters:",
                         size=13,
                     ),
                     ft.Container(
                         content=ft.Column(
                             [
-                                ft.Text("PF = Total Explosive Mass (kg) / V_rock (m³)", size=15, weight=ft.FontWeight.BOLD, color="#1976D2"),
-                                ft.Text("Where: V_rock = Burden × Spacing × Bench Height", size=12, color="#757575", italic=True),
+                                ft.Text("Total_Blasting_Cost = \u2211 [ (Q\u2091 \u00d7 P\u2091) + (N_det \u00d7 P_det) ] + Overheads", size=15, weight=ft.FontWeight.BOLD, color="#1976D2"),
+                                ft.Text("Where: Q\u2091 = Total explosive charge mass (kg),  P\u2091 = Explosive agent unit price ($/kg)\n"
+                                        "       N_det = Quantity of delay detonators,  P_det = Unit price of initiation networks ($/unit)", size=12, color="#757575", italic=True),
+                            ],
+                            spacing=6,
+                        ),
+                        bgcolor="#E3F2FD",
+                        border_radius=8,
+                        padding=ft.Padding(left=20, top=12, right=20, bottom=12),
+                    ),
+                    ft.Container(height=4),
+                    ft.Text(
+                        "To maximize spatial powder distribution efficiency while protecting nearby geologic bounds from micro-crack damage, "
+                        "the layout calculator evaluates the Powder Factor (PF):",
+                        size=13,
+                    ),
+                    ft.Container(
+                        content=ft.Column(
+                            [
+                                ft.Text("PF = Total Explosive Mass (kg) / V_rock (m\u00b3)", size=15, weight=ft.FontWeight.BOLD, color="#1976D2"),
+                                ft.Text("Where: V_rock = Burden \u00d7 Spacing \u00d7 Bench Height", size=12, color="#757575", italic=True),
                             ],
                             spacing=6,
                         ),
@@ -392,12 +413,12 @@ def main(page: ft.Page):
                         padding=ft.Padding(left=20, top=12, right=20, bottom=12),
                     ),
                     ft.Container(height=10),
-                    ft.Text("Video on project contribution:", weight=ft.FontWeight.BOLD, size=14),
+                    ft.Text("Embedded Video on project contribution:", weight=ft.FontWeight.BOLD, size=14),
                     ft.Container(
                         content=ft.Column(
                             [
-                                ft.Text("🎬  Click the button below to watch the video.", size=13, color="#424242", text_align=ft.TextAlign.CENTER),
-                                video_thumbnail,
+                                ft.Text("🎬  Click the thumbnail or the button below to watch the video.", size=13, color="#424242", text_align=ft.TextAlign.CENTER),
+                                video_box,
                                 open_btn,
                             ],
                             alignment=ft.MainAxisAlignment.CENTER,
@@ -414,10 +435,22 @@ def main(page: ft.Page):
             ),
             padding=20,
         )
+
     # ==================================================
-    # TAB 4: GITHUB EVIDENCE
+    # TAB 4: GITHUB EVIDENCE  
     # ==================================================
     def build_github_tab():
+        # Clean helper function to make compliant bullet rows completely safe from attribute errors
+        def make_bullet_row(text_value: str):
+            return ft.Row(
+                [
+                    ft.Text(" \u2022 ", size=14, weight=ft.FontWeight.BOLD, color="#1976D2"),
+                    ft.VerticalDivider(width=4),
+                    ft.Text(text_value, size=13, expand=True, color="#424242"),
+                ],
+                vertical_alignment=ft.CrossAxisAlignment.START,
+            )
+
         return ft.Container(
             content=ft.Column(
                 [
@@ -456,12 +489,12 @@ def main(page: ft.Page):
                                     "Engineering Problem Solved:",
                                     size=14,
                                     weight=ft.FontWeight.BOLD,
-                                    color="#1565C0"
+                                    color="#1565C0",
                                 ),
                                 ft.Text(
-                                    "In the mining and civil rock-blasting estimation sub-modules of BlastX, concurrent matrix updates "
-                                    "were triggering severe race conditions and computational deadlocks whenever multi-disciplinary teams "
-                                    "attempted to recalculate rock fragmentation distribution metrics simultaneously.",
+                                    "In the mining excavation and civil blast estimation sub-modules of BlastX, concurrent calculation data arrays "
+                                    "were triggering severe race conditions and runtime deadlocks whenever multi-disciplinary teams "
+                                    "attempted to compute rock-mass powder factors or update spatial blast geometries simultaneously.",
                                     size=13,
                                 ),
                                 ft.Container(height=6),
@@ -469,12 +502,12 @@ def main(page: ft.Page):
                                     "My Specific Contribution:",
                                     size=14,
                                     weight=ft.FontWeight.BOLD,
-                                    color="#1565C0"
+                                    color="#1565C0",
                                 ),
                                 ft.Text(
-                                    "I completely restructured the asynchronous data flow by isolating the material yield formulas "
-                                    "and writing a non-blocking asynchronous calculation engine. By cleaning up execution steps, "
-                                    "I prevented multi-user deadlocks and introduced strict state-isolation guards during runtime execution.",
+                                    "I structured an isolated asynchronous data flow by splitting out the computational logic blocks "
+                                    "and introducing a non-blocking execution cycle. By redesigning task queues, I eliminated cross-thread bottlenecks "
+                                    "and introduced transactional isolation states to secure spatial coordinate lookups.",
                                     size=13,
                                 ),
                                 ft.Container(height=6),
@@ -482,18 +515,13 @@ def main(page: ft.Page):
                                     "Measurable Impact Score:",
                                     size=14,
                                     weight=ft.FontWeight.BOLD,
-                                    color="#1565C0"
+                                    color="#1565C0",
                                 ),
-                                ft.Bullet(
-                                    "Processing Efficiency: Reduced computing overhead for intensive powder factor and volumetric rock calculations by 34%."
-                                ),
-                                ft.Bullet(
-                                    "Concurrency & Stability: Successfully eliminated 100% of application deadlocks during simultaneous multi-user blasting simulations."
-                                ),
-                                ft.Bullet(
-                                    "Data Fidelity: Enabled accurate execution of rock-mass structural metrics, ensuring that mining estimates align strictly with true financial bounds."
-                                ),
-                            ]
+                                make_bullet_row("Processing Efficiency: Reduced execution overhead for intensive powder factor and volumetric calculations by 34%."),
+                                make_bullet_row("System Concurrency: Eliminated 100% of application thread deadlocks during multi-user simulations."),
+                                make_bullet_row("Data Integrity: Ensured that structural fragmentation metrics align strictly with factual geo-mechanical constraints."),
+                            ],
+                            spacing=4,
                         ),
                         bgcolor="#E3F2FD",
                         border_radius=8,
@@ -540,7 +568,7 @@ def main(page: ft.Page):
     )
 
     # --------------------------------------------------
-    # HEADER
+    # HEADER 
     # --------------------------------------------------
     header_panel = ft.Container(
         content=ft.Column(
@@ -575,7 +603,7 @@ def main(page: ft.Page):
         expand=True,
     )
 
-    switch_tab(1)
+    switch_tab(1)  
 
     page.add(
         ft.Container(
