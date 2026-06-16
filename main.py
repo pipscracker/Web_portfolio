@@ -1,5 +1,5 @@
 import flet as ft
-import flet_video as ftv  # inline video player — requires: pip install flet-video
+import flet_video as ftv
 
 
 def main(page: ft.Page):
@@ -9,7 +9,7 @@ def main(page: ft.Page):
     page.theme_mode = ft.ThemeMode.LIGHT
 
     # --------------------------------------------------
-    # DOCUMENT VIEWER — full screen overlay via page.overlay
+    # DOCUMENT VIEWER 
     # --------------------------------------------------
     overlay_title = ft.Text("", size=15, weight=ft.FontWeight.BOLD, color="#1565C0")
     overlay_image = ft.Image(src="", fit="contain", width=700, height=500)
@@ -174,8 +174,6 @@ def main(page: ft.Page):
             ),
             padding=0,
         )
-    # --------------------------------------------------
-    # (open_video_overlay removed — video is now inline in blog tab)
 
     # ==================================================
     # TAB 1: PROJECT TIMELINE
@@ -277,24 +275,13 @@ def main(page: ft.Page):
         )
 
     # ==================================================
-    # TAB 3: TECHNICAL BLOG  (inline video — show/hide on button click)
+    # TAB 3: TECHNICAL BLOG  
     # ==================================================
     def build_blog_tab():
-        # ── Play the video INLINE on the page (no popup, no new tab/window) ──
         VIDEO_WIDTH = 560
         VIDEO_HEIGHT = 315  # 16:9
-
-        # NOTE: pass the BARE relative filename (same convention as
-        # ft.Image(src="commit_history.png") elsewhere in this file).
-        # Flet resolves this against assets_dir itself. Building an absolute
-        # "http://host:port/demo.mp4" URL manually was the bug — once a
-        # string has a scheme like "http://", Flet treats it as a literal
-        # external URL and skips the assets_dir lookup entirely, so it was
-        # requesting the wrong path and silently failing to load (hence the
-        # stuck 00:00 / 00:00 black player).
         VIDEO_ASSET = "demo.mp4"
 
-        # The box that will hold either the thumbnail OR the real video player
         video_box = ft.Container(width=VIDEO_WIDTH, height=VIDEO_HEIGHT, border_radius=10)
 
         def thumbnail_content():
@@ -333,8 +320,7 @@ def main(page: ft.Page):
             )
 
         def play_video(e):
-            # Swap the thumbnail out for a real, inline video player and
-            # start it immediately — nothing leaves the current page.
+            # start it immediately 
             video_box.content = ftv.Video(
                 playlist=[ftv.VideoMedia(VIDEO_ASSET)],
                 autoplay=True,
@@ -354,7 +340,7 @@ def main(page: ft.Page):
         video_box.on_click = play_video
         video_box.tooltip = "Click to watch video"
 
-        video_thumbnail = video_box  # kept name for the layout below
+        video_thumbnail = video_box  
 
         open_btn = ft.Container(
             content=ft.Text(
@@ -406,11 +392,11 @@ def main(page: ft.Page):
                         padding=ft.Padding(left=20, top=12, right=20, bottom=12),
                     ),
                     ft.Container(height=10),
-                    ft.Text("Embedded Video on project contribution:", weight=ft.FontWeight.BOLD, size=14),
+                    ft.Text("Video on project contribution:", weight=ft.FontWeight.BOLD, size=14),
                     ft.Container(
                         content=ft.Column(
                             [
-                                ft.Text("🎬  Click the thumbnail or the button below to watch the video.", size=13, color="#424242", text_align=ft.TextAlign.CENTER),
+                                ft.Text("🎬  Click the button below to watch the video.", size=13, color="#424242", text_align=ft.TextAlign.CENTER),
                                 video_thumbnail,
                                 open_btn,
                             ],
@@ -531,7 +517,18 @@ def main(page: ft.Page):
     header_panel = ft.Container(
         content=ft.Column(
             [
-                ft.Text("My Portfolio", size=28, weight=ft.FontWeight.BOLD, color="white"),
+                ft.Row(
+                    [
+                        ft.Text("My Portfolio", size=28, weight=ft.FontWeight.BOLD, color="white"),
+                        ft.CircleAvatar(
+                            background_image_url="profile pic.jpeg",
+                            radius=22,
+                        ),
+                    ],
+                    alignment=ft.MainAxisAlignment.CENTER,
+                    vertical_alignment=ft.CrossAxisAlignment.CENTER,
+                    spacing=12,
+                ),
                 ft.Text(
                     "Ireneus Shilunga | Electronics and Computer Engineering",
                     size=15,
@@ -550,7 +547,7 @@ def main(page: ft.Page):
         expand=True,
     )
 
-    switch_tab(1)  # default to MATLAB Hub
+    switch_tab(1)
 
     page.add(
         ft.Container(
